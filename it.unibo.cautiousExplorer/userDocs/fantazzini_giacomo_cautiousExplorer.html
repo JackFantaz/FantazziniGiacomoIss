@@ -213,29 +213,46 @@ Hopefully, he/she expects to receive also (in the same document) some detail abo
 
 <h2>Requirement analysis</h2>
 <div class="remark">
-<ks>GLOSSARY:</ks>
+
+<h3>Glossary</h3>
+<p><k>Terms such as <ks>robot</ks> or <ks>room</ks> already extensively described in the <ks>VirtualRobot2021</ks> attachment will not be repeated.</k></p>
 <ol>
-<li></li>
+<li>A <k>den</k> is a precise position along the boundary of the room. It is the same size of the robot and it is the place where the robot starts at the beginning of the execution.</li>
+<li>A <k>fixed obstacle</k> is a static entity placed inside the room with which the robot can collide.</li>
+<li><k>Finding</k> an obstacle means to acknowledge its presence distinguishing it from the boundary of the room.</li>
+<li><k>Returning</k> to the den means to move the robot to its original position and orientation.</li>
+<li>A <k>mental map</k> is an abstract and partial representation of the room and its content. It is accurate enough to enable the planning of movements in advance without any chance of incurring in unexpected collisions (the robot is stated to be virtual, with a real robot there is always a chance to collide). Since the map may be incomplete, the mentioned conditions hold only on the part of the room explored by the robot.</li>
+<li><k>Remembering</k> the postition of the obstacles means to create the mental map.</li>
 </ol>
-<ks>USER STORIES:</ks>
+<p><k>For now, optional requirements will be <ks>ignored</ks>.</k></p>
+
+<h3>User stories</h3>
 <ol>
-<li></li>
+<li>As a user, I want to place the robot somewhere along the boundary of a room and give it the start order, so that it travels inside the room until it finds an obstacle and then returns to the starting position.</li>
+<li>As a user, I want to see the mental map created by the robot on the last execution, so that I can infer some information on the configuration of the room.</li>
 </ol>
-<ks>INFORMAL TEST PLAN:</ks>
+
+<h3>Informal test plan</h3>
+<p><k>Note that we cannot exclude the possibility of the obstacle being placed along the boundary of the room. This severely complicates telling apart the walls of the room from the real obstalce.</k></p>
+<p><k>Also, it is known that the den is along the boundary, but the initial orientation of the robot inside the den is not known.</k></p>
 <ol>
-<li></li>
+<li>The robot moves in fixed and short time steps in order to somewhat measure the traveled distances. First the robot moves forward and backward by one step and repeat the same movements after turning left to ensure which side (or sides) are facing the boundary.</li>
+<li>The robot moves along the boundary in one direction until a collision is sensed and then in the other direction until another collision is sensed. The distances are measured in steps and stored.</li>
+<li>The robot moves inside the room by a number of steps close to its size and smaller than the expected size of the obstacle. The robot then moves again along the same two directions on a new column (or row) until a collision is sensed.</li>
+<li>The previous step is repeated over and over until a discrepancy in the measurements is found or until the change of column fails. If the measurements do not match the previous ones, then the obstacle is found, either on the current column or on the previous, whichever is the shorter. If the change of column fails, the robot tries to circumvent the obstacle, if it succeeds then it is indeed an obstalce, else it is the wall of the room and the search fails.</li>
+<li>The robot undoes the final moves deployed to ensure that the obstabcle was a proper one by repeating them inverted and in the opposite order. Then it travels in the direction opposite to the one of the column change until a collision is sensed. Finally, it moves along the boundary just met for the same amount of steps that was stored the first time. No other collision happen during this process.</li>
 </ol>
 </div>
 
 <h2>Problem analysis</h2>
 <div class="remark">
-<ks>LOGICAL ARCHITECTURE:</ks>
+<h3>Logical architecture</h3>
 <ol>
 <li></li>
 </ol>
-<ks>REFINED TEST PLAN:</ks>
+<h3>Refined test plan</h3>
 <ol>
-<li></li>
+<li><k>TODO</k></li>
 </ol>
 </div>
 
