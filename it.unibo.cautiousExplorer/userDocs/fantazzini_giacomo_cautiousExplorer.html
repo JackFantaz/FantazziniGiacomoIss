@@ -221,8 +221,8 @@ Hopefully, he/she expects to receive also (in the same document) some detail abo
 <li>A <k>fixed obstacle</k> is a static entity placed inside the room with which the robot can collide.</li>
 <li><k>Finding</k> an obstacle means to acknowledge its presence distinguishing it from the boundary of the room.</li>
 <li><k>Returning</k> to the den means to move the robot to its original position and orientation.</li>
-<li>A <k>mental map</k> is an abstract and partial representation of the room and its content. It is accurate enough to enable the planning of movements in advance without any chance of incurring in unexpected collisions (the robot is stated to be virtual, with a real robot there is always a chance to collide). Since the map may be incomplete, the mentioned conditions hold only on the part of the room explored by the robot.</li>
-<li><k>Remembering</k> the postition of the obstacles means to create the mental map.</li>
+<li>A <k>mental map</k> is an abstract and partial representation of the room and its content. It is accurate enough to enable the planning of hypothetical subsequent movements in advance without any chance of incurring in unexpected collisions (the robot is stated to be virtual, with a real robot there is always a chance to collide). Since the map may be incomplete, the mentioned conditions hold only on the part of the room explored by the robot.</li>
+<li><k>Remembering</k> the position of the obstacles means to create the mental map.</li>
 </ol>
 <p><k>For now, optional requirements will be <ks>ignored</ks>.</k></p>
 
@@ -233,14 +233,14 @@ Hopefully, he/she expects to receive also (in the same document) some detail abo
 </ol>
 
 <h3>Informal test plan</h3>
-<p><k>Note that we cannot exclude the possibility of the obstacle being placed along the boundary of the room. This severely complicates telling apart the walls of the room from the real obstalce.</k></p>
-<p><k>Also, it is known that the den is along the boundary, but the initial orientation of the robot inside the den is not known.</k></p>
+<p><k>Note that we cannot exclude the possibility of the obstacle being placed along the boundary of the room. This severely complicates telling apart the walls of the room from the actual obstacle.</k></p>
+<p><k>Also, it is known that the den is positioned along the boundary, but the initial orientation of the robot inside the den is not known.</k></p>
 <ol>
 <li>The robot moves in fixed and short time steps in order to somewhat measure the traveled distances. First the robot moves forward and backward by one step and repeat the same movements after turning left to ensure which side (or sides) are facing the boundary.</li>
 <li>The robot moves along the boundary in one direction until a collision is sensed and then in the other direction until another collision is sensed. The distances are measured in steps and stored.</li>
 <li>The robot moves inside the room by a number of steps close to its size and smaller than the expected size of the obstacle. The robot then moves again along the same two directions on a new column (or row) until a collision is sensed.</li>
-<li>The previous step is repeated over and over until a discrepancy in the measurements is found or until the change of column fails. If the measurements do not match the previous ones, then the obstacle is found, either on the current column or on the previous, whichever is the shorter. If the change of column fails, the robot tries to circumvent the obstacle, if it succeeds then it is indeed an obstalce, else it is the wall of the room and the search fails.</li>
-<li>The robot undoes the final moves deployed to ensure that the obstabcle was a proper one by repeating them inverted and in the opposite order. Then it travels in the direction opposite to the one of the column change until a collision is sensed. Finally, it moves along the boundary just met for the same amount of steps that was stored the first time. No other collision happen during this process.</li>
+<li>The previous step is repeated over and over until a discrepancy in the measurements is found or until the change of column fails. If the measurements do not match the previous ones, then the obstacle is found, either on the current column or on the previous, whichever is the shorter. If the change of column fails, the robot tries to circumvent the obstacle, if it succeeds then it is indeed an obstacle, else it is the wall of the room and the search fails.</li>
+<li>The robot undoes the final moves deployed to ensure that the obstacle was a proper one by repeating them inverted and in the opposite order. Then it travels in the direction opposite to the one of the column change until a collision is sensed. Finally, it moves along the boundary just met for the same amount of steps that was stored the first time. No other collision happen during this process.</li>
 </ol>
 </div>
 
@@ -248,7 +248,11 @@ Hopefully, he/she expects to receive also (in the same document) some detail abo
 <div class="remark">
 <h3>Logical architecture</h3>
 <ol>
-<li></li>
+<li>The <k>VirtualRobot2021</k> attachment specifies that the robot receives commands via HTTP POST or WebSocket in the <k>cril</k> format expressed as JSON strings. Each command sends back a response also as a JSON string.</li>
+<li>The problem description strongly suggests a <k>distributed architecture</k> with an external control unit giving orders to the robot and receiving information from it through the network.</li>
+<li>At the lowest level, the interaction between the control unit and the virtual robot must be a <k>request-response</k> by problem definition. It is however possible to abstract from it at a higher level.</li>
+<li>The <k>mental map</k> required to make the robot remember the position of the obstacle needs, at some point, to be human-readable.</li>
+<li>Given the need to move the robot in steps and to measure the room, any subsequent elaboration on the problem will follow the <k>aril</k> convention. It should not be difficult to convert from aril to cril while designing the project and it will be possible to choose a different language as a design choice in the future.</li>
 </ol>
 <h3>Refined test plan</h3>
 <ol>
