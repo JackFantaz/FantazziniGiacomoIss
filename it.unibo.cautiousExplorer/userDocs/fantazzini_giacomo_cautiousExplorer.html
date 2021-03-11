@@ -206,10 +206,13 @@ Optionally, it should also return to the <ks>den</ks> when a sonar detects its p
 <li>the robot should remember the position of the obstacles found, by creating a sort of 'mental map' of the environment.</li>
 </ul>
 
-<h3>Timing</h3>
+<h3>Delivery</h3>
 The customer requires to receive the completion of the analysis (of the requirments and of the problem)  by <k>Friday 12 March</k>.
-Hopefully, he/she expects to receive also (in the same document) some detail about the project.
-</div>
+Hopefully, he/she expects to receive also (in the same document) some detail about the project.<br/>
+The name of the file (in pdf) should be:
+<pre>
+cognome_nome_ce.pdf
+</pre></div>
 
 <h2>Requirement analysis</h2>
 <div class="remark">
@@ -217,47 +220,64 @@ Hopefully, he/she expects to receive also (in the same document) some detail abo
 <h3>Glossary</h3>
 <p><k>Terms such as <ks>robot</ks> or <ks>room</ks> already extensively described in the <ks>VirtualRobot2021</ks> attachment will not be repeated.</k></p>
 <ol>
-<li>A <k>den</k> is a precise position along the boundary of the room. It is the same size of the robot and it is the place where the robot starts at the beginning of the execution.</li>
-<li>A <k>fixed obstacle</k> is a static entity placed inside the room with which the robot can collide.</li>
-<li><k>Finding</k> an obstacle means to acknowledge its presence distinguishing it from the boundary of the room.</li>
+<li>A <k>den</k> is a precise position along the boundary of the room. It is the same size of the robot and it is the place where the robot starts with a specific initial orientation at the beginning of the execution.</li>
+<li>A <k>fixed obstacle</k> is a static entity placed inside the room with which the robot can collide. The walls forming the boundary of the room are also to be considered fixed obstacles.</li>
+<li><k>Finding</k> an obstacle means to acknowledge its presence by bumping into it.</li>
 <li><k>Returning</k> to the den means to move the robot to its original position and orientation.</li>
-<li>A <k>mental map</k> is an abstract and partial representation of the room and its content. It is accurate enough to enable the planning of hypothetical subsequent movements in advance without any chance of incurring in unexpected collisions (the robot is stated to be virtual, with a real robot there is always a chance to collide). Since the map may be incomplete, the mentioned conditions hold only on the part of the room explored by the robot.</li>
-<li><k>Remembering</k> the position of the obstacles means to create the mental map.</li>
+<li>A <k>mental map</k> is an abstract and partial representation of the room and its content. It describes at least the position of the den and the position of the found obstacle.</li>
+<li><k>Remembering</k> the position of the found obstacle means to create the mental map.</li>
+<li>A <k>sonar</k> is a virtual device able to detect and report the presence of the robot inside its area of effect.</li>
 </ol>
-<p><k>For now, optional requirements will be <ks>ignored</ks>.</k></p>
 
-<h3>User stories</h3>
-<ol>
-<li>As a user, I want to place the robot somewhere along the boundary of a room and give it the start order, so that it travels inside the room until it finds an obstacle and then returns to the starting position.</li>
-<li>As a user, I want to see the mental map created by the robot on the last execution, so that I can infer some information on the configuration of the room.</li>
-</ol>
+<h3>Main user story</h3>
+<p>As a user, I want to place the robot in its den and give it the start order, so that it travels inside the room until it finds an obstacle and then it returns to the den leveraging the mental map it created.</p>
 
 <h3>Informal test plan</h3>
-<p><k>Note that we cannot exclude the possibility of the obstacle being placed along the boundary of the room. This severely complicates telling apart the walls of the room from the actual obstacle.</k></p>
-<p><k>Also, it is known that the den is positioned along the boundary, but the initial orientation of the robot inside the den is not known.</k></p>
 <ol>
-<li>The robot moves in fixed and short time steps in order to somewhat measure the traveled distances. First the robot moves forward and backward by one step and repeat the same movements after turning left to ensure which side (or sides) are facing the boundary.</li>
-<li>The robot moves along the boundary in one direction until a collision is sensed and then in the other direction until another collision is sensed. The distances are measured in steps and stored.</li>
-<li>The robot moves inside the room by a number of steps close to its size and smaller than the expected size of the obstacle. The robot then moves again along the same two directions on a new column (or row) until a collision is sensed.</li>
-<li>The previous step is repeated over and over until a discrepancy in the measurements is found or until the change of column fails. If the measurements do not match the previous ones, then the obstacle is found, either on the current column or on the previous, whichever is the shorter. If the change of column fails, the robot tries to circumvent the obstacle, if it succeeds then it is indeed an obstacle, else it is the wall of the room and the search fails.</li>
-<li>The robot undoes the final moves deployed to ensure that the obstacle was a proper one by repeating them inverted and in the opposite order. Then it travels in the direction opposite to the one of the column change until a collision is sensed. Finally, it moves along the boundary just met for the same amount of steps that was stored the first time. No other collision happen during this process.</li>
+<li>The robot detects a collision in a sensible amount of time.</li>
+<li>At the end of the execution the robot is found at the same position and with the same orientation chosen for the beginning of the execution.</li>
+<li>The repetition of the same movements provides a collision at about the same time and no collisions on the way back. Further repetitions always yield the same results.</li>
+<li>The distance between the den and the obstacle is not too big for the given room.</li>
 </ol>
+<p><k>It could be useful to prepare an additional test with an obstacle in a known position, so that each measurement is verifiable against the ground truth.</k></p>
 </div>
 
 <h2>Problem analysis</h2>
 <div class="remark">
 <h3>Logical architecture</h3>
+<p><k>Note that the optional requirement about <ks>sonars</ks> will be ignored due to time limitations.</k></p>
 <ol>
 <li>The <k>VirtualRobot2021</k> attachment specifies that the robot receives commands via HTTP POST or WebSocket in the <k>cril</k> format expressed as JSON strings. Each command sends back a response also as a JSON string.</li>
 <li>The problem description strongly suggests a <k>distributed architecture</k> with an external control unit giving orders to the robot and receiving information from it through the network.</li>
 <li>At the lowest level, the interaction between the control unit and the virtual robot must be a <k>request-response</k> by problem definition. It is however possible to abstract from it at a higher level.</li>
-<li>The <k>mental map</k> required to make the robot remember the position of the obstacle needs, at some point, to be human-readable.</li>
-<li>Given the need to move the robot in steps and to measure the room, any subsequent elaboration on the problem will follow the <k>aril</k> convention. It should not be difficult to convert from aril to cril while designing the project and it will be possible to choose a different language as a design choice in the future.</li>
+<li>The presence of a mental map and the need to test the application require a mean to measure space and time. For this, any subsequent elaboration on the problem will follow the <k>aril</k> convention and measure both time and space in steps. It should not be difficult to convert from aril to cril while designing the project and it will be possible to choose a different top-level language as a design choice in the future.</li>
 </ol>
 <h3>Refined test plan</h3>
-<ol>
-<li><k>TODO</k></li>
-</ol>
+<ul>
+<li>Define a desired <ks>num_rep</ks> (number of repetitions) and a suitable <ks>max_ord</ks> (maximum number of orders)</li>
+<li>Place the robot (and its den) along the upper part of the western boundary facing south</li>
+<li>Repeat until a collision is sensed or <ks>max_ord</ks> is reached:</li>
+    <ul>
+    <li>Issue a random command between <kc>w</kc> and either <kc>l</kc> or <kc>r</kc> depending on which was the last turning command issued and picking the other (starting with <kc>l</kc>)</li>
+    <li>Append the drawn command to the path-string</li>
+    </ul>
+<li><k>Assert <ks>max_ord</ks> not reached</k></li>
+<li>Issue two <kc>l</kc> commands to turn the robot around</li>
+<li>Reverse the path-string and  replace every occurrence of <kc>l</kc> with <kc>r</kc> and every occurrence of <kc>r</kc> with <kc>l</kc></li>
+<li>Issue each command in the new path-string one by one</li>
+<li><k>Assert no collisions</k></li>
+<li>Issue two <kc>l</kc> commands to turn the robot around</li>
+<li>Repeat <ks>num_rep</ks> times:</li>
+    <ul>
+    <li>Re-issue one by one the command in the original path-string</li>
+    <li><k>Assert no collisions on the intermediate steps</k></li>
+    <li><k>Assert collision on the last step</k></li>
+    <li>Issue two <kc>l</kc> commands</li>
+    <li>Re-issue one by one the command in the reversed path-string</li>
+    <li><k>Assert no collisions</k></li>
+    <li>Issue two <kc>l</kc> commands</li>
+    </ul>
+</ul>
 </div>
 
 <!--
@@ -266,7 +286,9 @@ Hopefully, he/she expects to receive also (in the same document) some detail abo
 <pre>
 </pre>
 </div>
+-->
 
+<!--
 <h2>Project</h2>
 <h2>Testing</h2>
 <h2>Deployment</h2>
