@@ -1,4 +1,4 @@
-package iss2021_resumablebw;
+package iss2021_resumablebw.experiments;
 
 import it.unibo.annotations.ArilRobotSpec;
 import it.unibo.interaction.IssObserver;

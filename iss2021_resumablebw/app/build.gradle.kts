@@ -65,5 +65,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass.set("iss2021_resumablebw.App")
+    mainClass.set("iss2021_resumablebw.MyResumableClient")
 }

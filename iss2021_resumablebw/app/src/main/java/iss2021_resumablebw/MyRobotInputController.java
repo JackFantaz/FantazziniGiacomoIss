@@ -23,7 +23,7 @@ public class MyRobotInputController extends RobotInputController {
 
     @Override
     public synchronized void  handleInfo(JSONObject infoJson) {
-        System.out.println("MyAdvancedRobotInputController | handleInfo: " + infoJson.toString());
+        System.out.println("MyRobotInputController | handleInfo: " + infoJson.toString());
         if (infoJson.has("robotcmd")) handleRobotCommand(infoJson);
         else if (running) {
             super.handleInfo(infoJson);
@@ -34,7 +34,6 @@ public class MyRobotInputController extends RobotInputController {
 
     protected void handleRobotCommand(JSONObject info){
         String answer = info.get("robotcmd").toString();
-        //System.out.println("MyAdvancedRobotInputController | handleRobotCmd: " + answer);
         if (answer.equals("RESUME")) {
             if (!running) {
                 if (this.nextCommand != null) {

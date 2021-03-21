@@ -22,12 +22,11 @@ public class MyResumableClient {
 
     public void start() {
         this.console = new ConsoleGui(this.controller);
-        //this.controller.doBoundary();
     }
 
     public static void main(String[] args) {
         MyResumableClient application = (MyResumableClient) RobotApplicationStarter.createInstance(MyResumableClient.class);
-        application.start();
+        if (application != null) application.start();
     }
 
 }
