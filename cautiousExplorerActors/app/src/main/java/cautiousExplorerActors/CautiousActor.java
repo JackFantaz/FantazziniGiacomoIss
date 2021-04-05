@@ -10,40 +10,49 @@ public class CautiousActor extends ActorBasicJava {
 
     protected IssWsHttpJavaSupport support;
     protected ExplorationStrategy strategy;
+    protected RobotMovesInfo mapper;
     protected State state;
     protected StringBuilder path;
     protected String reversedPath;
+    protected boolean lastSonar;
 
     public CautiousActor(String name, IssWsHttpJavaSupport support, ExplorationStrategy strategy) {
         super(name);
         this.support = support;
         this.strategy = strategy;
+        this.mapper = new RobotMovesInfo(true);
         this.state = State.INIT;
         this.support.registerActor(this);
         this.path = new StringBuilder();
         this.reversedPath = null;
+        this.lastSonar = false;
     }
 
     @Override
     protected void handleInput(String s) {
-        System.out.println("handle input --> " + s);
         if (s.equals("start")) {
             this.automaton(true);
+            this.lastSonar = false;
         } else {
             JSONObject message = new JSONObject(s);
-            if (message.has("endmove")) this.automaton(Boolean.parseBoolean(message.getString("endmove")));
-            else {
-                System.out.println("handle input --> discard");
+            if (message.has("endmove")) {
+                this.automaton(Boolean.parseBoolean(message.getString("endmove")));
+                this.lastSonar = false;
+            }
+            else if (message.has("sonarName") && !lastSonar) {
+                this.delay(2000);
+                this.lastSonar = true;
             }
         }
+        System.out.println("INPUT --> " + s);
     }
 
     protected void automaton(boolean input) {
         switch(this.state) {
             case INIT:
-                System.out.println("automaton --> state init");
                 this.strategy.moveWithStrategy(this);
                 this.state = State.EXPLORE;
+                System.out.println("AUTOMATON --> init");
                 break;
             case EXPLORE:
                 if (input == true) {
@@ -53,6 +62,7 @@ public class CautiousActor extends ActorBasicJava {
                     this.turnLeft();
                     this.state = State.TURN_1;
                 }
+                System.out.println("PATH --> " + this.path.toString());
                 break;
             case TURN_1:
                 this.reversePath(this.path);
@@ -67,19 +77,20 @@ public class CautiousActor extends ActorBasicJava {
                     this.turnLeft();
                     this.state = State.TURN_2;
                 }
+                System.out.println("PATH --> " + this.reversedPath);
                 break;
             case TURN_2:
                 this.turnLeft();
                 this.state = State.HALT;
             case HALT:
-                System.out.println("automaton --> state halt");
+                System.out.println("AUTOMATON --> halt");
                 break;
         }
+        this.mapper.showRobotMovesRepresentation();
     }
 
     protected boolean moveWithPath() {
         boolean done = this.reversedPath.length() == 0;
-        System.out.println("MVP --> " + reversedPath + ", " + done);
         if (!done) {
             char move = this.reversedPath.charAt(0);
             this.reversedPath = this.reversedPath.substring(1);
@@ -91,17 +102,20 @@ public class CautiousActor extends ActorBasicJava {
     }
 
     protected void moveForward() {
-        support.forward("{\"robotmove\":\"moveForward\", \"time\": 350}");
+        this.support.forward("{\"robotmove\":\"moveForward\", \"time\": 350}");
+        this.mapper.updateMovesRep("w");
         this.delay(1000);
     }
 
     protected void turnLeft() {
-        support.forward("{\"robotmove\":\"turnLeft\", \"time\": 300}");
+        this.support.forward("{\"robotmove\":\"turnLeft\", \"time\": 300}");
+        this.mapper.updateMovesRep("l");
         this.delay(500);
     }
 
     protected void turnRight() {
-        support.forward("{\"robotmove\":\"turnRight\", \"time\": 300}");
+        this.support.forward("{\"robotmove\":\"turnRight\", \"time\": 300}");
+        this.mapper.updateMovesRep("r");
         this.delay(500);
     }
 

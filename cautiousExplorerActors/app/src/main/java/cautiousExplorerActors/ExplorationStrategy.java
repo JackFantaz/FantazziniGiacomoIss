@@ -7,11 +7,23 @@ public interface ExplorationStrategy {
 }
 
 class WhateverStrategy implements ExplorationStrategy {
-
+    private int a = 0;
+    private int b = 0;
     @Override
     public void moveWithStrategy(CautiousActor actor) {
-        actor.moveForward();
-        actor.path.append("W");
+        if (a % 2 == 0) {
+            actor.moveForward();
+            actor.path.append("W");
+        } else {
+            if (b % 2 == 0) {
+                actor.turnLeft();
+                actor.path.append("L");
+            } else {
+                actor.turnRight();
+                actor.path.append("R");
+            }
+            b++;
+        }
+        a++;
     }
-
 }
