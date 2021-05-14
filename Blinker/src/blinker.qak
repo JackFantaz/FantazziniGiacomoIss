@@ -1,0 +1,48 @@
+System blinker
+
+Dispatch click : click(N)
+Dispatch turn_on : turn_on(N)
+Dispatch turn_off : turn_off(N)
+
+Context ctx_blinker ip [host="localhost" port=60000]
+
+CodedQActor button_actor context ctx_blinker className "it.unibo.coded.ButtonActor"
+
+QActor blinker_actor context ctx_blinker {
+	
+	State off initial { }
+	Transition t_0	whenMsg click -> blinking
+	
+	State blinking {
+		forward led_actor -m turn_on : turn_on(0)
+		delay 500
+		forward led_actor -m turn_off : turn_ff(0)
+	}
+	Transition t_0	whenTime 500 -> blinking
+					whenMsg click -> off
+	
+}
+
+QActor led_actor context ctx_blinker {
+	
+	[#
+		val frame = javax.swing.JFrame()
+		frame.title = "Led"
+		frame.defaultCloseOperation = javax.swing.WindowConstants.EXIT_ON_CLOSE
+   		frame.setSize(300, 200)
+   		frame.setLocation(30, 250)
+    	frame.contentPane.background = java.awt.Color.BLACK
+    	frame.isVisible = true
+	#]
+
+	State off initial {
+		[# frame.contentPane.background = java.awt.Color.BLACK #]
+	}
+	Transition t_0	whenMsg turn_on -> on
+
+	State on {
+		[# frame.contentPane.background = java.awt.Color.YELLOW #]
+	}
+	Transition t_0	whenMsg turn_off -> off
+
+}
