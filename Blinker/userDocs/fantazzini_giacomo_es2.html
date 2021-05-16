@@ -177,7 +177,7 @@ div.imagedesc{
 
 <h2>Requirements</h2>
 <div class="remark">
-    Blink/Unblink a led using one or two buttons (e.g. START/STOP)
+    Blink/Unblink a led using one or two buttons (e.g. START/STOP).
 </div>
 
 <h2>Requirement analysis</h2>
@@ -275,7 +275,7 @@ override fun <kc>actionPerformed</kc>(e: ActionEvent?) {
     runBlocking { forward("click", "click(0)", "blinker_actor") }
 }
 </pre>
-    <p>During the next <ks>Sprint</ks>, the concept of a button should be generalized and encapsulated in a <ks>interface</ks> to enable the creation of different kinds of buttons without changing the implementation of the actor.</p>
+    <p>During the next <ks>Sprint</ks>, the concept of a button should be generalized and encapsulated into an <ks>interface</ks> to enable the creation of different kinds of buttons without changing the implementation of the actor.</p>
     <h3>The blinker (business logic)</h3>
     <p>The naive <k>Blinker Actor</k> described during the analysis of the problem is good enough and it will be implemented without any significant alteration.</p>
     <h3>The led</h3>
@@ -302,7 +302,7 @@ State <kc>on</kc> {
 }
 Transition t_0	whenMsg turn_off -> off
 </pre>
-    <p>During the next <ks>Sprint</ks>, the concept of a led should be generalized and encapsulated in a <ks>interface</ks> to enable the creation of different kinds of leds without changing the implementation of the actor.</p>
+    <p>During the next <ks>Sprint</ks>, the concept of a led should be generalized and encapsulated into an <ks>interface</ks> to enable the creation of different kinds of leds without changing the implementation of the actor.</p>
 </div>
 
 <h2>Deployment</h2>
