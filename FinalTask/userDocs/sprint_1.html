@@ -239,7 +239,6 @@ The <tt>transport trolley</tt> has the form of a square of side length <em>RD</e
 
 	The proper scene for the WEnv is reported in: <a href="https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.issLabStart/userDocs/parkingAreaConfig.js" target="code">parkingAreaConfig.js</a>
 
-
 	<center><img src="./img/parkingAreaZone.PNG" alt="parkingAreaZone.PNG" width="45%" height="32%"/></center>
 </li>
 <li>a <em>parking-manager</em> (an human being) which supervises the state of the <tt>parking-area</tt>
@@ -288,12 +287,10 @@ while the <b>start/stop</b> <ks>of the transport trolley</ks> is always up to me
 has not been cleaned within the <tt>DTFREE</tt> interval of time.</li>
 </ul>
 
-
 <h3>Requirements </h3>
 
 The <tt>ParkManagerService</tt>  should create the <tt>ParkServiceGUI</tt> (for the client)
 and the <tt>ParkServiceStatusGUI</tt> (for the manager) and then perform the following tasks:
-
 
 <ul>
 
@@ -321,7 +318,6 @@ If <k>SLOTNUM==0</k>:
 	<li><em>moveToHome</em>: if not already at home, move the <tt>transport trolley</tt> to its <tt>home</tt> location.</li>
 	</ul>
 </li>
-
 
 <li><hr/>
 <em>acceptOUT</em>: accept the request of a client to get out the car with <tt>TOKENID</tt>.
@@ -354,23 +350,10 @@ If the <tt>OUTDOOR-area</tt> is still engaged by a car, the request is not immed
 All the sensors (<tt>weigthsensor</tt>, <tt>outsonar</tt>, <tt>thermometer</tt> ) and the <tt>fan</tt> should be properly simulated
 by mock-objects or mock-actors.
 
-<h4>When using a real robot</h4>
-No further requirement.
-
 <h4>When available a Raspberry and a sonar</h4>
 The <tt>outsonar</tt> could be a real device. We can simulate the presence/absence of a car.
 
-    <h4>When using <k>only</k> the virtual robot or <k>no real sonar</k> available</h4>
-Consider the new requirement:
-<ul>
-<li><ks>authorize</ks>: allow a manager to use the <tt>ParkServiceStatusGUI</tt> only if she/he owns <bc>proper permissions</bc>.</li>
-
-</ul>
-
-
-
-
-<h2>Non functional requirements</h2>
+<h3>Non functional requirements</h3>
 <ol>
 <li>The ideal work team is composed of <bc>3 persons</bc>. Teams of 1 or 2 persons (<bc>NOT</bc> 4 or more) are also allowed. </li>
 <li>The team must present a <bc>workplan</bc> as the result of the requirement/problem analysis,
@@ -385,28 +368,6 @@ with the code and the related documents.</li>
 <li>The team must present (in synthetic, schematic way) the <bc>specific activity of each team-component</bc>.</li>
 
 </ol>
-
-
- <h3>Guidance</h3>
- <ul>
- <li>Oltre al codice sviluppato durante il corso, il progetto <a href="https://github.com/anatali/issLab2021/tree/main/it.unibo.qakDemo" target="code">it.unibo.qakDemo</a>
- include codice che potrebbe risultare utile per l'applicazione finale.</li>
-<li>Il numero e le finalità degli SPRINT sono definiti dal Team di sviluppo dopo opportune interazioni con il committente.</li>
-<li>Il committente (e/o il product-owner) è disponibile ONLINE in linea di massima ogni <bc>Giovedi dalle 15 alle 18</bc> fino a fine Luglio, ma è sempre contattabile on-demand via email. </li>
-<li>Lo svolgimento del lavoro è auspicabile avvenga in diverse fasi:
-<ol>
-<li><i>Fase di analisi</i>, che termina con la definizione di una architettura logica del sistema, di modelli eseguibili e alcuni, significativi piani di testing.
-<div class="remark">
-E' raccomandato che i risultati di questa fase vengano presentati al committente (con opportuno appuntamento) prima della consegna finale del prodotto.
-</div>
-</li>
-<li><i>Fase di progetto e realizzazione</i>, che termina con il deployment del prodotto.</li>
-<li><i>Fase di discussione</i> del lavoro svolto, che potrebbe (auspicabilmente) svolgersi IN PRESENZA in LAb2.
-E' opportuno che ogni partecipante sia pronto a discutere anche sugli elaborati che ha prodotto durante il corso. </li>
-</ol>
-
-</li>
-</ul>
 
 </div>
 
