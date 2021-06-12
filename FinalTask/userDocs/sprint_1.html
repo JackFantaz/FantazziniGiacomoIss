@@ -1,9 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-    <!--
-<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
-<script type="text/javascript" src="../css/issStyle.js"></script>
--->
+<head>
 <style type="text/css">
 body
 {
@@ -56,7 +53,8 @@ top {
 }
 tt{
 	font-family: "Arial";
-    font-size: 90%;
+    font-size: 80%;
+	font-weight: bold;
 	color: #006600;
 }
 em{
@@ -186,17 +184,17 @@ div.imagedesc{
 	margin: auto;
 }
 </style>
-
-<head>
 <title>Final task ISS-2021 Bologna: Automated Car-Parking</title>
 </head>
 
 <body>
+
 <div id="top">
 <h1>Final task ISS-2021 Bologna: Automated Car-Parking</h1>
 </div>
 
 <div class="body">
+
 <!-- <h2>Introduction</h2> -->
 <!-- <h4>Sprint 1</h4> -->
 
@@ -251,7 +249,7 @@ and handles critical situations<!-- by using a software system named <em>ParkMon
 The job of our company is to design, build and deploy the  <em>ParkManagerService</em>.
 </div>
 <!-- and the <em>ParkMonitoringService</em>.-->
-<h3>User stories</h3>
+<h3 id="requirements_user_stories">User stories</h3>
 As a <bc>client - parking phase</bc> :
 <ul>
 <li>I intend to use a <em>ParkServiceGUI</em> provided by the <tt>ParkManagerService</tt>  to notify my interest in <i>entering</i>
@@ -289,7 +287,7 @@ while the <b>start/stop</b> <ks>of the transport trolley</ks> is always up to me
 has not been cleaned within the <tt>DTFREE</tt> interval of time.</li>
 </ul>
 
-<h3>Requirements </h3>
+<h3 id="requirements_requirements">Requirements </h3>
 
 The <tt>ParkManagerService</tt>  should create the <tt>ParkServiceGUI</tt> (for the client)
 and the <tt>ParkServiceStatusGUI</tt> (for the manager) and then perform the following tasks:
@@ -373,7 +371,7 @@ with the code and the related documents.</li>
 
 </div>
 
-<h2>Requirement analysis</h2>
+<h2>Requirements analysis</h2>
 
 <div class="remark">
 <h3>Glossary</h3>
@@ -386,36 +384,44 @@ with the code and the related documents.</li>
     <li><k>Parking-slot:</k> a squared portion of the <kc>parking-area</kc> of side <ks>RD</ks> where parked cars are stored by the <kc>trolley</kc>; there are six of them and they are identified by a <ks>SLOTNUM</ks>;</li>
     <li><k>Fan:</k> device able to lower the temperature of the <kc>parking-area</kc>;</li>
     <li><k>Fixed obstacles:</k> the parts of the <kc>parking-area</kc> where the <kc>trolley</kc> is not able to pass through.</li>
-
 </ul>
 
-<h3>User story</h3>
-<ol>
-<li>As a user, I want that the robot starts from its home position, walks up to the INDOOR (in which it will have the face facing north), positions itself in front of a specific parking-slot and goes back to the home.</li>
-<li>From the home the robot comes back to the previous parking-slot, walks up to the OUTDOOR (in which it will have the face facing south) and goes back to its home position.</li>
-</ol>
-<center><img src="./img/sprint_1.png" width="600px"></center>
+<h3>User stories</h3>
+
+The <a href="#requirements_user_stories">user stories</a> provided by the customer are sufficiently precise and complete and they do not need immediate elaboration.
+
+<h3>Informal test plan</h3>
+The <a href="#requirements_requirements">requirement details</a> provided by the customer are accurate enough to act as an informal test plan on their own.
 </div>
 
 <h2>Problem analysis</h2>
 <div class="remark">
-    <h3>Relevant aspects</h3>
-    <ol>
-        <li>The system to be built will be a distributed system, consisting of several macro-components:</li>
-            <ul>
-                <li>the transport trolley;</li>
-                <li>the weight sensor;</li>
-                <li>the thermometer;</li>
-                <li>the fan;</li>
-                <li>the outsonar;</li>
-                <li>our application (ParkManagerService) that sends commands to the robot in order to meet the requirements.</li>
-            </ul>
-    </ol>
+<h3>Relevant aspects</h3>
+<ol>
+    <li>The system to be built will be a distributed system, consisting of several macro-components:</li>
+    <ul>
+        <li>the transport trolley;</li>
+        <li>the weight sensor;</li>
+        <li>the thermometer;</li>
+        <li>the fan;</li>
+        <li>the outsonar;</li>
+        <li>our application (ParkManagerService) that sends commands to the robot in order to meet the requirements.</li>
+    </ul>
+</ol>
+
+<h3>Logical architecture</h3>
+<h3>Refined test plan</h3>
+
 </div>
 
 <h2>Test plans</h2>
 
 <div class="remark">
+<ol>
+<li>As a user, I want that the robot starts from its home position, walks up to the INDOOR (in which it will have the face facing north), positions itself in front of a specific parking-slot and goes back to the home.</li>
+<li>From the home the robot comes back to the previous parking-slot, walks up to the OUTDOOR (in which it will have the face facing south) and goes back to its home position.</li>
+</ol>
+<center><img src="./img/sprint_1.png" width="600px"></center>
 </div>
 
 <h2>Project</h2>
