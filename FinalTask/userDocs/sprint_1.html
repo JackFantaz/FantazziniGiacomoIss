@@ -2,37 +2,29 @@
 <html>
 <head>
 <style type="text/css">
-body
-{
+body {
     margin-left:  30px;
     margin-right: 30px;
 };
-
-P
-{
+P {
     font-family: Tahoma;
     font-size: 10pt;
 };
-
 a, a:visited, a:active, a:link, a:hover {
     text-decoration: underline;
     color: #545454;
     background-color: transparent;
 	font-size: 93%;
 }
-
 a:hover {
     background-color: #cccccc;
 }
-
-
 hr {
     clear: both;
     height: 1px;
     color: #242424;
     background-color: transparent;
 }
-
 h1, h2, h3 {
     color: #242424;
     clear: left;
@@ -42,12 +34,9 @@ h1, h2, h3 {
 	border-radius: 10px;
 	padding: 5px;
 }
-
 top {
 	width: 100%;
 }
-
-
 #i {
     color: #ff1010;
 }
@@ -110,12 +99,10 @@ h1 {
     background-color: #b2c0ff;
 	padding: 10px;
 }
-
 h2 {
     background-color: #9ed8ff;
     font-size: 130%;
 }
-
 h3 {
 	background-color: #e6ccff;
     font-size: 100%;
@@ -151,34 +138,28 @@ table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
 }
-
 ol, ul, li {
   margin: 0;
   margin-left: 10px;
   padding: 0;
   padding-bottom: 5px;
 }
-
 table, th, td {
 	border: 1px solid black;
 }
-
 img {
 	border: 1.5px solid #d5f2ed
 
 }
-
 a, a:visited, a:active, a:link, a:hover {
     text-decoration: underline;
     color: #545454;
     background-color: transparent;
 }
-
 div.wrapdesc{
 	width: 90%;
 	margin: auto;
 }
-
 div.imagedesc{
 	width: 85%;
 	margin: auto;
@@ -369,16 +350,14 @@ with the code and the related documents.</li>
 
 </ol>
 
-</div>
-
 <h2>Requirements analysis</h2>
 
 <div class="remark">
 <h3>Glossary</h3>
 <ul>
     <li><k>Transport trolley:</k> a squared robot of side <ks>RD</ks> able to pick up a car and transport it from a point of the map to another; the robot picks up and puts down cars from the square in front of it; while the car is on the robot, they fill the same space on the map;</li>
-    <li><k>Home:</k> the home location of the <kc>trolley</kc> is the north-western corner of the room, facing south;</li>
-    <li><k>Parking-area:</k> empty room containing the <kc>parking-slots</kc>, the home location and some maneuvering space for the <kc>trolley</kc>;</li>
+    <li><k>Home:</k> the home location of the <kc>trolley</kc> is the north-western corner of the parking-area, facing south;</li>
+    <li><k>Parking-area:</k> rectangular empty room containing the <kc>parking-slots</kc>, the home location and some maneuvering space for the <kc>trolley</kc>;</li>
     <li><k>INDOOR-area:</k> the area where cars wait for the <kc>trolley</kc> to pick them up; it is not part of the <kc>parking-area</kc>;</li>
     <li><k>OUTDOOR-area:</k> the area where the <kc>trolley</kc> leaves the cars to be picked up by their owners; it is not part of the <kc>parking-area</kc>;</li>
     <li><k>Parking-slot:</k> a squared portion of the <kc>parking-area</kc> of side <ks>RD</ks> where parked cars are stored by the <kc>trolley</kc>; there are six of them and they are identified by a <ks>SLOTNUM</ks>;</li>
