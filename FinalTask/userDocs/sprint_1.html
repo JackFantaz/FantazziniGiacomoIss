@@ -355,7 +355,13 @@ with the code and the related documents.</li>
 <div class="remark">
 <h3>Glossary</h3>
 <ul>
-    <li><k>Transport trolley:</k> a squared robot of side <ks>RD</ks> able to pick up a car and transport it from a point of the map to another; the robot picks up and puts down cars from the square in front of it; while the car is on the robot, they fill the same space on the map;</li>
+    <li><k>Transport trolley:</k></li>
+		<ul>
+			<li>a squared robot of side <ks>RD</ks> able to pick up a car and transport it from a point of the map to another;</li>
+			<li>the robot picks up and puts down cars from the square in front of it;</li>
+			<li>while the car is on the robot, they fill the same space on the map;</li>
+			<li>for this purpose, the customer provided his own <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html">virtual robot</a>;</li>
+		</ul>
     <li><k>Home:</k> the home location of the <kc>trolley</kc> is the north-western corner of the parking-area, facing south;</li>
     <li><k>Parking-area:</k> rectangular empty room containing the <kc>parking-slots</kc>, the home location and some maneuvering space for the <kc>trolley</kc>;</li>
     <li><k>INDOOR-area:</k> the area where cars wait for the <kc>trolley</kc> to pick them up; it is not part of the <kc>parking-area</kc>;</li>
@@ -386,9 +392,24 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
         <li>the outsonar;</li>
         <li>our application (ParkManagerService) that sends commands to the robot in order to meet the requirements.</li>
     </ul>
+	<li>Being a distributed system made of several heterogeneous components, it would benefit greatly from a message-passing form of communication and each logical component should be modeled as an actor; we will leverage the <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.qakactor/userDocs/LabQakIntro2021.html">QAK meta-model</a>, already developed by our company, to build executable models.</li>
+	<li>Since the available map measures the parking-area in squares of side length RD (like the trolley), the communication with the virtual robot should be </li>
+	<li>PROTOCOLLI</li>
 </ol>
 
 <h3>Logical architecture</h3>
+
+<h4>Presence sensors</h4>
+
+<p>The <kc>INDOOR-area</kc> and the <kc>OUTDOOR-area</kc> are respectively equipped with a <ks>weightsensor</ks> and an <ks>outsonar</ks>. While being two physically different components, they serve the same logical function and thus they can be both modeled as <k>presence sensors</k> with appropriate adapters.</p>
+<p>The sensor model should be queryable to know if it does or does not detect a presence. The actor using it should poll the presence at each given interval of a time <ks>TPOLL</ks> and fire an <k>event</k> each time the status changes from present to non-present or the other way around</p>
+<center><img src="./img/presence_actor.png" width="600px"></center>
+
+<h4>Thermometer and fan</h4>
+<p>Much like the sonar and the weight sensor, the <ks>thermometer</ks> should be a queryable component encapsulated into an actor that polls the temperature and fires an <k>event</k> with the new temperature value each time it varies significantly.</p>
+<p>The <ks>fan</ks> should be a reactive component able to turn ON and OFF the device. Its control actor should be able to receive <k>dispatches</k> and update the ON/OFF status of the fan according to them.</p>
+<center><img src="./img/thermometer_and_fan.png" width="600px"></center>
+
 <h3>Refined test plan</h3>
 
 </div>
