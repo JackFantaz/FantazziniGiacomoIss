@@ -393,7 +393,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
         <li>our application (ParkManagerService) that sends commands to the robot in order to meet the requirements.</li>
     </ul>
 	<li>Being a distributed system made of several heterogeneous components, it would benefit greatly from a message-passing form of communication and each logical component should be modeled as an actor; we will leverage the <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.qakactor/userDocs/LabQakIntro2021.html">QAK meta-model</a>, already developed by our company, to build executable models.</li>
-	<li>Since the available map measures the parking-area in squares of side length RD (like the trolley), the communication with the virtual robot should be </li>
+	<li>Since the available map measures the <kc>parking-area</kc> in squares of side length <ks>RD</ks> (like the trolley), the communication with the virtual robot should follow the <k>aril</k> convention, as described in the document provided by the customer.</li>
 	<li>PROTOCOLLI</li>
 </ol>
 
@@ -402,13 +402,13 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 <h4>Presence sensors</h4>
 
 <p>The <kc>INDOOR-area</kc> and the <kc>OUTDOOR-area</kc> are respectively equipped with a <ks>weightsensor</ks> and an <ks>outsonar</ks>. While being two physically different components, they serve the same logical function and thus they can be both modeled as <k>presence sensors</k> with appropriate adapters.</p>
-<p>The sensor model should be queryable to know if it does or does not detect a presence. The actor using it should poll the presence at each given interval of a time <ks>TPOLL</ks> and fire an <k>event</k> each time the status changes from present to non-present or the other way around</p>
-<center><img src="./img/presence_actor.png" width="600px"></center>
+<p>The sensor model should be queryable as to know if it does or does not detect a presence. The actor using it should poll the presence at each given interval of a time <ks>TPOLL</ks> and fire an <k>event</k> each time the status changes from present to non-present or the other way around.</p>
+<center><img src="./img/presence_actor.png" width="500px"></center>
 
 <h4>Thermometer and fan</h4>
 <p>Much like the sonar and the weight sensor, the <ks>thermometer</ks> should be a queryable component encapsulated into an actor that polls the temperature and fires an <k>event</k> with the new temperature value each time it varies significantly.</p>
 <p>The <ks>fan</ks> should be a reactive component able to turn ON and OFF the device. Its control actor should be able to receive <k>dispatches</k> and update the ON/OFF status of the fan according to them.</p>
-<center><img src="./img/thermometer_and_fan.png" width="600px"></center>
+<center><img src="./img/thermometer_and_fan.png" width="500px"></center>
 
 <h3>Refined test plan</h3>
 
@@ -421,7 +421,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 <li>As a user, I want that the robot starts from its home position, walks up to the INDOOR (in which it will have the face facing north), positions itself in front of a specific parking-slot and goes back to the home.</li>
 <li>From the home the robot comes back to the previous parking-slot, walks up to the OUTDOOR (in which it will have the face facing south) and goes back to its home position.</li>
 </ol>
-<center><img src="./img/sprint_1.png" width="600px"></center>
+<center><img src="./img/sprint_1.png" width="500px"></center>
 </div>
 
 <h2>Project</h2>
