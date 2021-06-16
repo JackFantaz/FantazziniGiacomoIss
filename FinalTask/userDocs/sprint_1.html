@@ -399,6 +399,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 	<li>TEMPI DI SVILUPPO</li>
 	<li>LISTA DI PRIORITA' PER GLI SPRINT</li>
 	<li>EVIDENZIARE FUNZIONAMENTI PROATTIVI E REATTIVI</li>
+	<li>BasicStepRobotActor vs. RobotService</li>
 </ol>
 <center><img src="./img/actors.png" width="500px"></center>
 
@@ -408,24 +409,30 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 <p>The <kc>INDOOR-area</kc> and the <kc>OUTDOOR-area</kc> are respectively equipped with a <ks>weightsensor</ks> and an <ks>outsonar</ks>. While being two physically different components, they serve the same logical function and thus they can be both modeled as <k>presence sensors</k> with appropriate <k>adapters</k>.</p>
 <p>The sensor entity should be queryable as to know if it does or does not detect a presence. The actor using it (one for each sensor) should poll the presence within a fixed interval of time and fire an <k>event</k> each time the status changes from present to not-present (or the other way around).</p>
 <center><img src="./img/presence_actor.png" width="500px"></center>
+<p>The responsibility to fire an <k>alarm</k> if the <kc>OUTDOOR-area</kc> has not been cleared within <ks>DTFREE</ks> time may be given to the presence actor equipped with the weight sensor, however it is probably best left elsewhere.</p>
 
 <h4>Thermometer and fan</h4>
 <p>Much like the sonar and the weight sensor, the <ks>thermometer</ks> should be a queryable component encapsulated into an actor that polls the temperature and fires an <k>event</k> with the new temperature value each time it varies <k>significantly</k>.</p>
-<p>Alternatively, it may be more useful to distribute part of the business logic and instruct the thermometer actor to fire an <k>event</k> only when the temperature goes from below to above or from above to below the given threshold <ks>TMAX</ks>. Compared to the first option, this option would also have the useful side-effect of not requiring us to determine when a temperature variation is significative enough to be reported and when it is not.</p>
+<p>Alternatively, it may be more useful to distribute part of the business logic and instruct the thermometer actor to fire an <k>event</k> only when the temperature goes from below to above or from above to below the given threshold <ks>TMAX</ks>. Compared to the first option, this one would also have the useful side-effect of not requiring us to determine when a temperature variation is significative enough to be reported and when it is not.</p>
 <p>The <ks>fan</ks> should be a passive component able to turn ON and OFF the device when notified to do so. Its control actor should be able to receive <k>dispatches</k> and update the ON/OFF status of the fan according to them.</p>
 <center><img src="./img/thermometer_and_fan.png" width="500px"></center>
 
 <h4>The business logic</h4>
-<p>The core business logic can be implemented as a finite-state machine as described by the following diagram, with <ks>enter_request</ks> being the notification from the client to enter their car and <ks>exit_request</ks> being the presentation of the <ks>TOKENID</ks> from the client to take out their car.</p>
+<p>The conceptual movement of the <k>trolley</k> can be implemented as a finite-state machine as described by the following diagram, with <ks>enter_request</ks> being the notification from the client to request the parking of their car and <ks>exit_request</ks> being the presentation of the <ks>TOKENID</ks> by the client to signal the intention to take out their car.</p>
 <center><img src="./img/business_logic.png" width="500px"></center>
-<p>Two important facts are left out of the diagram to improve readability:</p>
+<p>The <ks>goto</ks> and <ks>pickup/putdown</ks> output messages of this finite-state machine should be forwarded to an entity able to perform the relative implied action on the trolley. Such entity should notify the logic with a <ks>done</ks> message when each action has been performed.</p>
+<p>Two important facts are left out of the diagram to improve its readability:</p>
 <ol>
-	<li>The entering procedure should be initiated only if there is at least one vacant parking slot, else the trolley must remain idle (of course the number, position and status of the parking spots must be properly checked and updated);</li>
-	<li>The advancement of the automaton must be carried on only while the trolley is not stopped by the manager.</li>
+	<li>The entering procedure (right branch in the picture) can be started only if there is at least one <k>vacant</k> parking slot, else the trolley must remain idle (the number, position and status of the parking slots must be properly checked and updated);</li>
+	<li>The execution of the automaton must be carried on only if the trolley is <k>not stopped</k> by the manager, else its state must not change.</li>
 </ol>
 
-<h4>The trolley</h4>
-<p>BasicStepRobotActor vs. RobotService</p>
+<h4>Driving the trolley</h4>
+<p>The core business logic previously described as a finite-state machine should be enclosed into an actor, from now on called <kc>Trolley Status</kc>, which sends its commands through <k>dispatches</k> to a <kc>Robot Driver</kc> actor, which is responsible of the actual movement of the robot.</p>
+
+<p>An already available singleton object called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.planner20/userDocs/LabPlanner.html#plannerUtil">Planner Util</a> is able to plan the route to drive the robot to the specified spot avoiding obstacles, if provided with a map such as the one made available by the customer. This tool should be extended by a new component called <kc>Directional Planner</kc> to add the functionality to plan the desired orientation of the robot alongside its desired position. To carry out its duty, the <kc>Robot Driver</kc> should leverage this new utility.</p>
+<p>The <kc>Virtual Robot</kc> service represents the virtual robot environment provided by the customer, however it should be wrapped by one of the more sophisticated tools already available, such as the <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html#IssWsHttpKotlinSupport">Basic Step Robot Actor</a> or the <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.kotlinSupports/userDocs/RobotService.html">Robot Service</a>. The communication with the environment should anyway be carried out with a <k>request-reply</k> paradigm due to the implementation of the provided environment.</p>
+<center><img src="./img/trolley_driving.png" width="500px"></center>
 
 <h3>Refined test plan</h3>
 <p>OGNI TEST PLAN DEVE ESSERE COLLEGATO AD UNA SPECIFICA USER STORY</p>
