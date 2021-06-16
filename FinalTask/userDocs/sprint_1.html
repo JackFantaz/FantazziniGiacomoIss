@@ -416,6 +416,13 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 <center><img src="./img/thermometer_and_fan.png" width="500px"></center>
 
 <h4>The business logic</h4>
+<p>The core business logic can be implemented as a finite-state machine as described by the following diagram, with <ks>enter_request</ks> being the notification from the client to enter their car and <ks>exit_request</ks> being the presentation of the <ks>TOKENID</ks> from the client to take out their car.</p>
+<center><img src="./img/business_logic.png" width="500px"></center>
+<p>Two important facts are left out of the diagram to improve readability:</p>
+<ol>
+	<li>The entering procedure should be initiated only if there is at least one vacant parking slot, else the trolley must remain idle (of course the number, position and status of the parking spots must be properly checked and updated);</li>
+	<li>The advancement of the automaton must be carried on only while the trolley is not stopped by the manager.</li>
+</ol>
 
 <h4>The trolley</h4>
 <p>BasicStepRobotActor vs. RobotService</p>
