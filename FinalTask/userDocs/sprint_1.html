@@ -390,27 +390,38 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
         <li>the thermometer;</li>
         <li>the fan;</li>
         <li>the outsonar;</li>
-        <li>our application (ParkManagerService) that sends commands to the robot in order to meet the requirements.</li>
+        <li>our application (ParkManagerService), which sends commands to the trolley in order to meet the requirements.</li>
     </ul>
-	<li>Being a distributed system made of several heterogeneous components, it would benefit greatly from a message-passing form of communication and each logical component should be modeled as an actor; we will leverage the <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.qakactor/userDocs/LabQakIntro2021.html">QAK meta-model</a>, already developed by our company, to build executable models.</li>
-	<li>Since the available map measures the <kc>parking-area</kc> in squares of side length <ks>RD</ks> (like the trolley), the communication with the virtual robot should follow the <k>aril</k> convention, as described in the document provided by the customer.</li>
+	<li>This distributed system, made of several heterogeneous components, would benefit greatly from an <k>actor-based</k> framework with support for <k>message-passing</k> interaction; for this purpose, we should leverage the avaliable <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.qakactor/userDocs/LabQakIntro2021.html#qakoverview">QAK meta-model</a> to build executable models; each logical component should be modeled as an actor;</li>
+	<li>Since the available map measures the <kc>parking-area</kc> in squares of side length <ks>RD</ks> (same as trolley size), the communication with the virtual robot should follow the <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.boundaryWalk/userDocs/BoundaryWalk.html#aril">aril convention</a>;</li>
 	<li>PROTOCOLLI</li>
+	<li>ABSTRACTION GAP</li>
+	<li>TEMPI DI SVILUPPO</li>
+	<li>LISTA DI PRIORITA' PER GLI SPRINT</li>
+	<li>EVIDENZIARE FUNZIONAMENTI PROATTIVI E REATTIVI</li>
 </ol>
+<center><img src="./img/actors.png" width="500px"></center>
 
 <h3>Logical architecture</h3>
 
 <h4>Presence sensors</h4>
-
-<p>The <kc>INDOOR-area</kc> and the <kc>OUTDOOR-area</kc> are respectively equipped with a <ks>weightsensor</ks> and an <ks>outsonar</ks>. While being two physically different components, they serve the same logical function and thus they can be both modeled as <k>presence sensors</k> with appropriate adapters.</p>
-<p>The sensor model should be queryable as to know if it does or does not detect a presence. The actor using it should poll the presence at each given interval of a time <ks>TPOLL</ks> and fire an <k>event</k> each time the status changes from present to non-present or the other way around.</p>
+<p>The <kc>INDOOR-area</kc> and the <kc>OUTDOOR-area</kc> are respectively equipped with a <ks>weightsensor</ks> and an <ks>outsonar</ks>. While being two physically different components, they serve the same logical function and thus they can be both modeled as <k>presence sensors</k> with appropriate <k>adapters</k>.</p>
+<p>The sensor entity should be queryable as to know if it does or does not detect a presence. The actor using it (one for each sensor) should poll the presence within a fixed interval of time and fire an <k>event</k> each time the status changes from present to not-present (or the other way around).</p>
 <center><img src="./img/presence_actor.png" width="500px"></center>
 
 <h4>Thermometer and fan</h4>
-<p>Much like the sonar and the weight sensor, the <ks>thermometer</ks> should be a queryable component encapsulated into an actor that polls the temperature and fires an <k>event</k> with the new temperature value each time it varies significantly.</p>
-<p>The <ks>fan</ks> should be a reactive component able to turn ON and OFF the device. Its control actor should be able to receive <k>dispatches</k> and update the ON/OFF status of the fan according to them.</p>
+<p>Much like the sonar and the weight sensor, the <ks>thermometer</ks> should be a queryable component encapsulated into an actor that polls the temperature and fires an <k>event</k> with the new temperature value each time it varies <k>significantly</k>.</p>
+<p>Alternatively, it may be more useful to distribute part of the business logic and instruct the thermometer actor to fire an <k>event</k> only when the temperature goes from below to above or from above to below the given threshold <ks>TMAX</ks>. Compared to the first option, this option would also have the useful side-effect of not requiring us to determine when a temperature variation is significative enough to be reported and when it is not.</p>
+<p>The <ks>fan</ks> should be a passive component able to turn ON and OFF the device when notified to do so. Its control actor should be able to receive <k>dispatches</k> and update the ON/OFF status of the fan according to them.</p>
 <center><img src="./img/thermometer_and_fan.png" width="500px"></center>
 
+<h4>The business logic</h4>
+
+<h4>The trolley</h4>
+<p>BasicStepRobotActor vs. RobotService</p>
+
 <h3>Refined test plan</h3>
+<p>OGNI TEST PLAN DEVE ESSERE COLLEGATO AD UNA SPECIFICA USER STORY</p>
 
 </div>
 
