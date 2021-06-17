@@ -417,6 +417,17 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 <p>The <ks>fan</ks> should be a passive component able to turn ON and OFF the device when notified to do so. Its control actor should be able to receive <k>dispatches</k> and update the ON/OFF status of the fan according to them.</p>
 <center><img src="./img/thermometer_and_fan.png" width="500px"></center>
 
+<h4>ParkServiceGUI and ParkServiceStatusGUI</h4>
+<p>The ParkManagerService app is composed by two gui : ParkServiceGUI and ParkServiceStatusGUI.</p>
+<p>The <k>ParkServiceGUI</k> has three buttons:</p>
+<ol>
+	<li>The first button needs to notify the interest in <ks>entering client auto</ks> in the parking-area and to receive as answer the number SLOTNUM of a free parking-slot (1<=SLOTNUM<=6). If the SLOTNUM is equal to zero, it means that no free slot is available.</li>
+	<li>The second button (<ks>CARENTER</ks>) can be pressed only if SLOTNUM is greater than zero, and the transport trolley will take the car from the INDOOR to the assigned parking-slot. Then it will show to the customer a receipt that includes the (unique) <ks>TOKENID</ks> that will be needed when picking up the auto.</li>
+	<li>The third button needs to <ks>pick up the car</ks> witch the TOKENID received before, so the client’s car will be moved to the OUTDOOR-area.</li>
+</ol>
+<p>The <k>ParkServiceStatusGUI</k> has four buttons, one for each thing whose state is observable: the <ks>parking-area</ks> (including the value TA of the temperature), the <ks>fan</ks> and the <ks>transport trolley</ks>, whose state can be idle, working or stopped.</p>
+
+
 <h4>The business logic</h4>
 <p>The conceptual movement of the <k>trolley</k> can be implemented as a finite-state machine as described by the following diagram, with <ks>enter_request</ks> being the notification from the client to request the parking of their car and <ks>exit_request</ks> being the presentation of the <ks>TOKENID</ks> by the client to signal the intention to take out their car.</p>
 <center><img src="./img/business_logic.png" width="500px"></center>
