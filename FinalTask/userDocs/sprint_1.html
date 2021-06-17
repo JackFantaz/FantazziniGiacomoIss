@@ -368,7 +368,8 @@ with the code and the related documents.</li>
     <li><k>OUTDOOR-area:</k> the area where the <kc>trolley</kc> leaves the cars to be picked up by their owners; it is not part of the <kc>parking-area</kc>;</li>
     <li><k>Parking-slot:</k> a squared portion of the <kc>parking-area</kc> of side <ks>RD</ks> where parked cars are stored by the <kc>trolley</kc>; there are six of them and they are identified by a <ks>SLOTNUM</ks>;</li>
     <li><k>Fan:</k> device able to lower the temperature of the <kc>parking-area</kc>;</li>
-    <li><k>Fixed obstacles:</k> the parts of the <kc>parking-area</kc> where the <kc>trolley</kc> is not able to pass through.</li>
+    <li><k>Fixed obstacles:</k> the parts of the <kc>parking-area</kc> where the <kc>trolley</kc> is not able to pass through;</li>
+	<li><k>Hopefully / Optionally:</k> the corresponding requirements should be implemented and employable as an alternative to the default behavior.</li>
 </ul>
 
 <h3>User stories</h3>
@@ -399,7 +400,6 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 	<li>TEMPI DI SVILUPPO</li>
 	<li>LISTA DI PRIORITA' PER GLI SPRINT</li>
 	<li>EVIDENZIARE FUNZIONAMENTI PROATTIVI E REATTIVI</li>
-	<li>BasicStepRobotActor vs. RobotService</li>
 </ol>
 <center><img src="./img/actors.png" width="500px"></center>
 
@@ -419,7 +419,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <p>Much like the sonar and the weight sensor, the <ks>thermometer</ks> should be a queryable component encapsulated into an actor that polls the temperature and fires an <k>event</k> with the new temperature value each time it varies <k>significantly</k>. Concerning the significance of a variation in temperature, it is worth noting that most general purpose sensors have a sensibility of <ks>0.1 °C</ks>.
 
-<p>The <ks>fan</ks> should be a passive component able to turn ON and OFF the device when notified to do so. Its control actor should be able to receive <k>dispatches</k> and update the ON/OFF status of the fan according to them.</p>
+<p>The <ks>fan</ks> should be a passive component able to start and stop the device when notified to do so. Its actor should be able to receive <k>dispatches</k> and update the status of the fan according to them.</p>
 
 <center><img src="./img/thermometer_and_fan.png" width="500px"></center>
 
@@ -450,27 +450,28 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <h4>Driving the trolley</h4>
 
-<p>The <kc>Robot Driver</kc> is responsible for the actuation of trolley movements on the provided virtual environment <kc>WEnv</kc>. This actor receives high level <k>dispatches</k> from the main business logic stating where the trolley has to go and converts them in a series of elemental steps. It then signals back the business logic when each logical movement has been completed.</p>
-
-<p>An already available singleton object called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.planner20/userDocs/LabPlanner.html#plannerUtil">Planner Util</a> is able to plan the route to drive the robot to a specified spot avoiding obstacles, if provided with a map such as the one made available by the customer. This tool should be extended by a new component called <kc>Directional Planner</kc> to add the functionality to plan the desired orientation of the robot alongside its desired position (so when the movement is complete, the trolley is also oriented toward the desired direction). To carry out its duty, the <kc>Robot Driver</kc> should leverage this new utility.</p>
-
-<p>The <kc>WEnv</kc> should be accessed through a more sophisticated tool, already available, called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html#IssWsHttpKotlinSupport">Basic Step Robot Actor</a>, which is able to avoid interferences among overlapping commands and to natively receive movement orders expressed as steps. A new service, called <kc>RobotProxy</kc>, should be developed to ensure compatibility between our <kc>RobotDriver</kc> and the legacy tool <kc>Basic Step Robot Actor</kc>.</p>
-
-<p>The <kc>WEnv</kc> requires a <k>request-reply</k> communication paradigm and while some steps of the command chain favor different approaches, the responses from the <kc>WEnv</kc> should always be brought back to the <kc>Robot Driver</kc>.</p>
+<p>The <kc>Robot Driver</kc> is responsible for the actuation of trolley movements on the provided virtual environment <kc>WEnv</kc>. This actor receives high level <k>dispatches</k> from the main business logic stating where the trolley has to go and converts them in a series of elemental steps. It then signals back the business logic when each relocation of the trolley has been completed.</p>
 
 <center><img src="./img/trolley_driving.png" width="500px"></center>
+
+<p>An already available singleton object called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.planner20/userDocs/LabPlanner.html#plannerUtil">Planner Util</a> is able to plan the route to drive a robot to a specified spot avoiding obstacles, if provided with a map such as the one made available by the customer. This tool should be extended by a new component, which we will call <kc>Directional Planner</kc>, to add the functionality to plan the desired orientation of the robot alongside its desired position (so when the movement is complete, the trolley is also oriented toward the desired direction). To carry out its duties, the <kc>Robot Driver</kc> should leverage this new utility.</p>
+
+<p>To access the <kc>WEnv</kc> it should be considered the possibility to use a more sophisticated tool, already available, called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html#IssWsHttpKotlinSupport">Basic Step Robot Actor</a>, which would be able to avoid interferences among overlapping commands and to natively receive movement orders expressed as steps. A new service, for now called <kc>RobotProxy</kc>, may be required to ensure compatibility between our <kc>RobotDriver</kc> and the legacy tool <kc>Basic Step Robot Actor</kc>.</p>
+
+<p>The <kc>WEnv</kc> requires a <k>request-reply</k> communication paradigm. Even if some intermediate steps will probably favor different approaches, the responses from the <kc>WEnv</kc> should nevertheless be always brought back to the <kc>Robot Driver</kc>.</p>
 
 <h3>Refined test plan</h3>
 <p>OGNI TEST PLAN DEVE ESSERE COLLEGATO AD UNA SPECIFICA USER STORY</p>
 
 </div>
 
-<h2>Test plans</h2>
+<!--<h2>Test plans</h2>
 
 <div class="remark">
 <ol>
-<li>As a user, I want that the robot starts from its home position, walks up to the INDOOR (in which it will have the face facing north), positions itself in front of a specific parking-slot and goes back to the home.</li>
-<li>From the home the robot comes back to the previous parking-slot, walks up to the OUTDOOR (in which it will have the face facing south) and goes back to its home position.</li>
+<li>LINK AL CODICE JUNIT</li>
+<li>As a user, I want that the trolley starts from its home position, walks up to the INDOOR (in which it will have the face facing north), positions itself in front of a specific parking-slot and goes back to the home.</li>
+<li>From the home the trolley comes back to the previous parking-slot, walks up to the OUTDOOR (in which it will have the face facing south) and goes back to its home position.</li>
 </ol>
 <center><img src="./img/sprint_1.PNG" width="500px"></center>
 </div>
@@ -493,7 +494,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 <h2>Maintenance</h2>
 
 <div class="remark">
-</div>
+</div>-->
 
 <!-- USEFUL
 <table style="width:100%" border="1">
@@ -508,7 +509,8 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 <br/>
 </div>
 
-<div style="background-color: #e6ccff; color: #242424; clear: left; font: 100% Tahoma, Helvetica, Arial, sans-serif; margin-bottom: 0.5em; padding-top: 0.5em; border-radius: 10px; padding: 5px; width:60%">
+<div style="background-color: #b2c0ff; color: #242424; clear: left; font: 100% Tahoma, Helvetica, Arial, sans-serif; margin-bottom: 0.5em; padding-top: 0.5em; border-radius: 10px; padding: 5px; width:60%">
+	<span style="color:crimson;font-weight:bold;">NOMI, COGNOMI, FOTORGAFIE, EMAIL</span>
 </div>
 </body>
 </html>
