@@ -423,16 +423,19 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <h4>ParkServiceGUI and ParkServiceStatusGUI</h4>
 <p>The ParkManagerService app is composed by two gui : ParkServiceGUI and ParkServiceStatusGUI.</p>
+<center><img src="./img/gui_actor.png" width="500px"></center>
+
 <p>The <k>ParkServiceGUI</k> has three buttons:</p>
 <ol>
 	<li>The first button needs to notify the interest in <ks>entering client auto</ks> in the parking-area and to receive as answer the number SLOTNUM of a free parking-slot (1<=SLOTNUM<=6). If the SLOTNUM is equal to zero, it means that no free slot is available.</li>
 	<li>The second button (<ks>CARENTER</ks>) can be pressed only if SLOTNUM is greater than zero, so the transport trolley will take the car from the INDOOR to the assigned parking-slot. Then it will show to the customer a receipt that includes the (unique) <ks>TOKENID</ks> that will be needed when picking up the auto.</li>
 	<li>The third button needs to <ks>pick up the car</ks> with the TOKENID received before and it must be written in the specific section, under the button. So the client’s car will be moved to the OUTDOOR-area.</li>
 </ol>
-<p>The <k>ParkServiceStatusGUI</k> has a grid with the <ks>parking-area</ks> status (in which red rectangles are occupied parking-slots), a section with the <ks>transport trolley</ks> status (idle, working or stopped), a dedicated section to <ks>temperature</ks> of the parking-area, in which you can see and manage the <ks>fan</ks> status when it is necessary with the use of three buttons: <k>start</k>, <k>stop</k> or <k>auto</k> to automate the behavior of the fan. At last there is a rectangle in which alarms appear.</p>
-<center><img src="./img/gui_actor.png" width="500px"></center>
 <center><img src="./img/parkservicegui.png" width="500px"></center>
+
+<p>The <k>ParkServiceStatusGUI</k> has a grid with the <ks>parking-area</ks> status (in which red rectangles are occupied parking-slots), a section with the <ks>transport trolley</ks> status (idle, working or stopped), a dedicated section to <ks>temperature</ks> of the parking-area, in which you can see and manage the <ks>fan</ks> status when it is necessary with the use of three buttons: <k>start</k>, <k>stop</k> or <k>auto</k> to automate the behavior of the fan. At last there is a rectangle in which alarms appear.</p>
 <center><img src="./img/parkservicestatusgui.png" width="500px"></center>
+
 <h4>The business logic</h4>
 
 <p>The core business logic can be conveniently described as a finite-state machine.</p>
