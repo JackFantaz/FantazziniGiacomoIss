@@ -395,14 +395,15 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
     </ul>
 	<li>This distributed system, made of several heterogeneous components, would benefit greatly from an <k>actor-based</k> framework with support for <k>message-passing</k> interaction; for this purpose, we should leverage the available <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.qakactor/userDocs/LabQakIntro2021.html#qakoverview">QAK meta-model</a> to build executable models;</li>
 	<li>Since the available map measures the <kc>parking-area</kc> in squares of side length <ks>RD</ks> (same as trolley size), the communication with the virtual robot should follow the <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.boundaryWalk/userDocs/BoundaryWalk.html#aril">aril convention</a>;</li>
-	<li>There isn't a conceptual abstraction gap for this problem, however, since we proposed to exploit the <k>QAK meta-model</k> for the reasons previously described, we are in front of an <k>abstraction gap</k> regarding the use of languages, since QAK relies on Java and Kotlin to work and consequently will be the ones that will be used. However, QAK itself manages to fill a large part of this limitation, as it was built specifically for this type of systems, it will facilitate the design work;</li>
-	<li>The <k>QAK meta-model</k> provides compatibility with the communication protocols <ks>TCP</ks>, <ks>MQTT</ks> and <ks>CoAP</ks> for interaction between actors; regarding the communication with the <k>virtual environment</k>, both supported interaction models (<ks>HTTP POST</ks> and <ks>WebSocket</ks>) are fit for the task.</li>
-
+	<li>There isn't any conceptual abstraction gap for this problem, however since we proposed to exploit the <k>QAK meta-model</k>, we are put in front of an <k>abstraction gap</k> regarding the use of languages because QAK relies on Java and Kotlin to work. However, QAK itself manages to fill a large part of this limitation, as it is supplied with its own domain specific language and because it was designed specifically for heterogeneous distributed systems;</li>
+	<li>The <k>QAK meta-model</k> provides compatibility with the communication protocols <ks>TCP</ks>, <ks>MQTT</ks> and <ks>CoAP</ks>, equally valid for the interaction between actors; regarding the communication with the <k>virtual environment</k>, both supported interaction models (<ks>HTTP POST</ks> and <ks>WebSocket</ks>) are fit for the task.</li>
+	<li>We will use the following <k>legend</k> for all the diagrams in the document:</li>
+	<center><img src="./img/legenda.png" width="400px"></center>
 </ol>
 
 <h3>Logical architecture</h3>
 
-<p>Each logical component should be modeled as an actor or split in two or more actor as expressed by the following general architecture:</p>
+<p>Each logical component should be modeled as an actor or split in two or more actors as expressed by the following general architecture (plus some minor actors introduced later):</p>
 
 <center><img src="./img/actors.png" width="600px"></center>
 
@@ -414,7 +415,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <p>The sensor entity should be queryable as to know if it does or does not detect a presence. The actor using it (one for each sensor) should poll the presence within a fixed interval of time and fire an <k>event</k> each time the status changes from present to not-present (or the other way around). These actors thus present <k>proactive</k> behavior.</p>
 
-<center><img src="./img/sonar_and_weight.png" width="500px"></center>
+<center><img src="./img/sonar_and_weight.png" width="400px"></center>
 
 <h4>The thermometer and the fan</h4>
 
@@ -422,7 +423,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <p>The <ks>fan</ks> should be a passive component able to start and stop the device when notified to do so. Its actor is <k>reactive</k> in nature and should be able to receive <k>dispatches</k> and update the status of the fan according to them.</p>
 
-<center><img src="./img/thermometer_and_fan.png" width="500px"></center>
+<center><img src="./img/thermometer_and_fan.png" width="400px"></center>
 
 <h4>The user interfaces</h4>
 
@@ -467,7 +468,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <p>The diagram hereunder presents a possible architecture taking advantage of the suggested tools:</p>
 
-<center><img src="./img/trolley_driving.png" width="500px"></center>
+<center><img src="./img/trolley_driving.png" width="600px"></center>
 
 <p>The <kc>WEnv</kc> requires a <k>request-reply</k> communication paradigm. Even if some intermediate steps will probably favor different approaches, the replies from the <kc>WEnv</kc> should nevertheless be always brought back to the actor that originated the relative requests.</p>
 
@@ -479,7 +480,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <p>We suggest the presence of two <k>proactive</k> actors, one for the <kc>OUTDOOR</kc> and one for the temperature, that fire an <k>event</k> each time they have an alarm or a notification to report. For the actor requiring temporization, it is available a legacy component called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.cautiousExplorer/userDocs/cautiousExplorerActors.html#project">TimerActor</a> that may be leveraged for this purpose. The diagram hereunder presented report this conceptual interaction:</p>
 
-<center><img src="./img/alarms.png" width="400px"></center>
+<center><img src="./img/alarms.png" width="600px"></center>
 
 <h3>Workplan</h3>
 <p>LISTA DI PRIORITÀ PER GLI SPRINT E TEMPI DI SVILUPPO</p>
