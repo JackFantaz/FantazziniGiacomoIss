@@ -397,7 +397,6 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 	<li>Since the available map measures the <kc>parking-area</kc> in squares of side length <ks>RD</ks> (same as trolley size), the communication with the virtual robot should follow the <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.boundaryWalk/userDocs/BoundaryWalk.html#aril">aril convention</a>;</li>
 	<li>PROTOCOLLI</li>
 	<li>ABSTRACTION GAP</li>
-	<li>EVIDENZIARE FUNZIONAMENTI PROATTIVI E REATTIVI</li>
 </ol>
 <center><img src="./img/actors.png" width="500px"></center>
 
@@ -439,7 +438,8 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <h4>The business logic</h4>
 
-<p>The core business logic can be conveniently described as a finite-state machine to be enclosed into a proper actor. </p>
+<p>The core business logic can be conveniently described as a finite-state machine to be enclosed into a proper actor. Such actor controls the main state of the application and presents a purely <k>reactive</k> behavior, since it just reacts to external stimuli.</p>
+
 <center><img src="./img/business_logic.png" width="700px"></center>
 
 <p>The <ks>goto</ks> outputs should be delivered to an entity able to perform the implied set of elementary actions on the trolley.</p>
@@ -460,13 +460,15 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <p>The <kc>WEnv</kc> requires a <k>request-reply</k> communication paradigm. Even if some intermediate steps will probably favor different approaches, the replies from the <kc>WEnv</kc> should nevertheless be always brought back to the actor that originated the relative requests.</p>
 
+<p>The <kc>WEnv</kc> itself presents both proactive and reactive behavior, however for this application it is only required its <k>reactive</k> nature, since there are no virtual sonars in the scene and since robot collisions are theoretically excluded by the presence of the map.</p>
+
 <h4>The alarms</h4>
 
 <p>The system requires the presence of a timed alarm for when the <kc>OUTDOOR-area</kc> has not been cleared within <ks>DTFREE</ks> time from the beginning of its occupation. The system also suggests the presence of a second alarm for when <ks>TA</ks> exceeds <ks>TMAX</ks> and some kind of notification for when <ks>TA</ks> goes back into its normal low temperature range.</p>
 
-<p>We suggest the presence of two actors, one for the OUTDOOR and one for the temperature, that fire an <k>event</k> each time they have an alarm or a notification to report. For the actor requiring temporization, it is available a legacy component called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.cautiousExplorer/userDocs/cautiousExplorerActors.html#project">TimerActor</a> that may be leveraged for this purpose.</p>
+<p>We suggest the presence of two <k>proactive</k> actors, one for the <kc>OUTDOOR</kc> and one for the temperature, that fire an <k>event</k> each time they have an alarm or a notification to report. For the actor requiring temporization, it is available a legacy component called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.cautiousExplorer/userDocs/cautiousExplorerActors.html#project">TimerActor</a> that may be leveraged for this purpose.</p>
 
-<center><img src="./img/alarms.png" width="500px"></center>
+<center><img src="./img/alarms.png" width="400px"></center>
 
 <h3>Workplan</h3>
 <p>LISTA DI PRIORITÀ PER GLI SPRINT E TEMPI DI SVILUPPO</p>
