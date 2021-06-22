@@ -409,15 +409,15 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <center><img src="./img/presence_actor.png" width="500px"></center>
 
-<p>The sensor entity should be queryable as to know if it does or does not detect a presence. The actor using it (one for each sensor) should poll the presence within a fixed interval of time and fire an <k>event</k> each time the status changes from present to not-present (or the other way around).</p>
+<p>The sensor entity should be queryable as to know if it does or does not detect a presence. The actor using it (one for each sensor) should poll the presence within a fixed interval of time and fire an <k>event</k> each time the status changes from present to not-present (or the other way around). These actors thus present <k>proactive</k> behavior.</p>
 
 <center><img src="./img/sonar_and_weight.png" width="500px"></center>
 
 <h4>Thermometer and fan</h4>
 
-<p>Much like the sonar and the weight sensor, the <ks>thermometer</ks> should be a queryable component encapsulated into an actor that polls the temperature and fires an <k>event</k> with the new temperature value each time it varies <k>significantly</k>. Concerning the significance of a variation in temperature, it is worth noting that most general purpose sensors have a sensibility of <ks>0.1 °C</ks>.
+<p>Much like the sonar and the weight sensor, the <ks>thermometer</ks> should be a queryable component encapsulated into a <k>proactive</k> actor that polls the temperature and fires an <k>event</k> with the new temperature value each time it varies <k>significantly</k>. Concerning the significance of a variation in temperature, it is worth noting that most general purpose sensors have a sensibility of <ks>0.1 °C</ks>.
 
-<p>The <ks>fan</ks> should be a passive component able to start and stop the device when notified to do so. Its actor should be able to receive <k>dispatches</k> and update the status of the fan according to them.</p>
+<p>The <ks>fan</ks> should be a passive component able to start and stop the device when notified to do so. Its actor is <k>reactive</k> in nature and should be able to receive <k>dispatches</k> and update the status of the fan according to them.</p>
 
 <center><img src="./img/thermometer_and_fan.png" width="500px"></center>
 
@@ -439,7 +439,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <h4>The business logic</h4>
 
-<p>The core business logic can be conveniently described as a finite-state machine.</p>
+<p>The core business logic can be conveniently described as a finite-state machine to be enclosed into a proper actor. </p>
 <center><img src="./img/business_logic.png" width="700px"></center>
 
 <p>The <ks>goto</ks> outputs should be delivered to an entity able to perform the implied set of elementary actions on the trolley.</p>
