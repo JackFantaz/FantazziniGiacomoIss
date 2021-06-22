@@ -488,24 +488,24 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 <h3>Refined test plan</h3>
 <h4>User story 1 - parking phase</h4>
 <ul>
-	<li>In the case of the INDOOR-area is occupied, when the client presses the "PARKING SLOT" button he will receive a notification that no request can be sent.</li>
-	<li>The INDOOR-area is free and the client uses the "PARKING SLOT" button, the business logic processes the request and the SLOTNUM is displayed in the gui itself.</li>
-	<li>If SLOTNUM> 0, then the client presses the "CARENTER" button and the transport trolley goes to position itself in the INDOOR-area and then in the slot previously indicated as SLOTNUM. Then that specific parking slot changes status and is shown as occupied in the ParkServiceStatusGUI table. Finally, the transport trolley returns to the home. At that point, a receipt with a TOKENID is shown to the client on the screen.</li>
-	<li>If SLOTNUM = 0, a message is shown on the screen indicating that there is no space in the parking-area and, if the customer decides to wait for the shift, as soon as SLOTNUM> 0 then his request is processed as in the previous case.</li>
-	<li>If the transport trolley is stopped and the customer presses the "CARENTER" button, the request is rejected and the client is notified.</li>
+	<li>In case of occupied INDOOR-area, when the client presses the "PARKING SLOT" button he receives a notification that no request can be sent.</li>
+	<li>The INDOOR-area is free and the client uses the "PARKING SLOT" button, the business logic processes the request and the SLOTNUM is displayed in the GUI itself.</li>
+	<li>If SLOTNUM > 0, then the client presses the "CARENTER" button and the transport trolley positions itself in the INDOOR-area and then in the slot previously indicated by SLOTNUM. Then that specific parking slot changes status and is shown as occupied in the ParkServiceStatusGUI table. Finally, the transport trolley returns to its home. At that point, a receipt with a TOKENID is shown to the client on the screen.</li>
+	<li>If SLOTNUM = 0, a message is shown on the screen indicating that there is no space in the parking-area and, if the client decides to wait for its turn, as soon as SLOTNUM > 0 then his request is processed as in the previous case.</li>
+	<li>If the transport trolley status is stopped and the client presses the "CARENTER" button, the request is rejected and the client is notified.</li>
 </ul>
 
 <h4>User story 2 - car pick up phase</h4>
 <ul>
-	<li>When the customer presses the "PICK UP THE CAR" button, the request to enter the TOKENID is shown on the screen. If the code entered exists and is correct and the OUTDOOR-area is free, the transport trolley goes to the parking-slot (associated to that TOKENID) and then to the OUTDOOR-area. Finally it returns to home. Then that specific parking-slot will change status and will be shown as free in the ParkServiceStatusGUI table.</li>
-	<li>If the OUTDOOR-area is occupied, however, when the client presses the "PICK UP THE CAR" button, he receives a notification that no request can be sent. As soon as the area is free, his request will be processed as in the previous case.</li>
-	<li>If the entered code does not exist or is not correct, then an error message will be shown on the screen and the customer will have to re-enter the TOKENID.</li>
-	<li>If the transport trolley is stopped and the customer presses the "PICK UP THE CAR" button, the request is rejected and the client is notified.</li>
+	<li>When the client presses the "PICK UP THE CAR" button, the request to enter the TOKENID is shown on the screen. If the code entered exists and is correct and the OUTDOOR-area is free, the transport trolley goes to the parking-slot (associated to that TOKENID) and then to the OUTDOOR-area. Finally it returns to home. Then that specific parking-slot will change status and will be shown as free in the ParkServiceStatusGUI table.</li>
+	<li>If the OUTDOOR-area is occupied, when the client presses the "PICK UP THE CAR" button, he receives a notification that no request can be sent. As soon as the area is free, his request will be processed as in the previous case.</li>
+	<li>If the entered code does not exist or is not correct, then an error message will be shown on the screen and the client will have to re-enter the TOKENID.</li>
+	<li>If the transport trolley status is stopped and the client presses the "PICK UP THE CAR" button, the request is rejected and the client is notified.</li>
 </ul>
 
 <h4>User story 3 - parking-manager</h4>
 <ul>
-	<li>When the parking manager presses the "START" button in the fan area, the latter receives the command, the mock of the fan declares to have turned on and the fan status changes to START. When the “STOP” button is then pressed and the fan declares that it has turned off, the fan status changes to STOP.</li>
+	<li>When the parking manager presses the "START" button in the fan area, the mock of the fan declares to have turned on and the fan status changes to START. When the "STOP" button is pressed and the fan declares that it has turned off, the fan status changes to STOP.</li>
 	<li>When the "AUTO" button has been pressed and the temperature rises above TMAX, the fan activates itself and the fan status changes to START. When the temperature value returns below TMAX, the fan turns off and the fan status changes to STOP.</li>
 	<li>When the parking manager presses the "START" button in the transport trolley area, the latter stops working and its status in the ParkServiceStatusGUI changes START. When he then presses the "STOP" button, the transport trolley resumes its job and its status becomes STOP.</li>
 	<li>When the OUTDOOR-area remains occupied more than the DTFREE time interval, then an alarm message is shown on the screen. As soon as the OUTDOOR-area will be free, the error message will no longer be shown.</li>
