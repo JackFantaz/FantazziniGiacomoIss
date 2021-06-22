@@ -463,6 +463,10 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <p>The system requires the presence of a timed alarm for when the <kc>OUTDOOR-area</kc> has not been cleared within <ks>DTFREE</ks> time from the beginning of its occupation. The system also suggests the presence of a second alarm for when <ks>TA</ks> exceeds <ks>TMAX</ks> and some kind of notification for when <ks>TA</ks> goes back into its normal low temperature range.</p>
 
+<p>We suggest the presence of two actors, one for the OUTDOOR and one for the temperature, that fire an <k>event</k> each time they have an alarm or a notification to report. For the actor requiring temporization, it is available a legacy component called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.cautiousExplorer/userDocs/cautiousExplorerActors.html#project">TimerActor</a> that may be leveraged for this purpose.</p>
+
+<center><img src="./img/alarms.png" width="500px"></center>
+
 <h3>Workplan</h3>
 <p>LISTA DI PRIORITÀ PER GLI SPRINT E TEMPI DI SVILUPPO</p>
 
