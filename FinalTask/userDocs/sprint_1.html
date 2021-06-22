@@ -423,6 +423,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <h4>ParkServiceGUI and ParkServiceStatusGUI</h4>
 <p>The ParkManagerService app is composed by two gui : ParkServiceGUI and ParkServiceStatusGUI.</p>
+<p>We need to separate the two gui using two different actors because they cannot be on the same business logic node and because the customer's device will not be the same as the one the application is on.</p>
 <center><img src="./img/gui_actor.png" width="500px"></center>
 
 <p>The <k>ParkServiceGUI</k> has three buttons:</p>
