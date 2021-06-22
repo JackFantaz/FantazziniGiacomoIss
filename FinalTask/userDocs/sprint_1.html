@@ -386,7 +386,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 <ol>
     <li>The system to be built will be a distributed system, consisting of several macro-components:</li>
     <ul>
-        <li>the transport trolley;</li>
+        <li>the transport trolley (and its virtual environment);</li>
         <li>the weight sensor;</li>
         <li>the thermometer;</li>
         <li>the fan;</li>
@@ -397,8 +397,6 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 	<li>Since the available map measures the <kc>parking-area</kc> in squares of side length <ks>RD</ks> (same as trolley size), the communication with the virtual robot should follow the <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.boundaryWalk/userDocs/BoundaryWalk.html#aril">aril convention</a>;</li>
 	<li>PROTOCOLLI</li>
 	<li>ABSTRACTION GAP</li>
-	<li>TEMPI DI SVILUPPO</li>
-	<li>LISTA DI PRIORITA' PER GLI SPRINT</li>
 	<li>EVIDENZIARE FUNZIONAMENTI PROATTIVI E REATTIVI</li>
 </ol>
 <center><img src="./img/actors.png" width="500px"></center>
@@ -437,29 +435,29 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 <center><img src="./img/parkservicestatusgui.png" width="500px"></center>
 <h4>The business logic</h4>
 
-<p>The main business logic leading to the movement of the trolley can be conveniently implemented as a finite-state machine as described by the following diagram.</p>
-<center><img src="./img/business_logic.png" width="500px"></center>
+<p>The core business logic can be conveniently described as a finite-state machine.</p>
+<center><img src="./img/business_logic.png" width="700px"></center>
 
-<p>The <ks>goto</ks> and <ks>pickup/putdown</ks> output messages of this finite-state machine should be forwarded to an entity able to perform the relative implied action on the trolley. Such entity should notify the logic with a <ks>done</ks> message when each action has been performed.</p>
+<p>The <ks>goto</ks> outputs should be delivered to an entity able to perform the implied set of elementary actions on the trolley.</p>
 
-<p>Three important facts are left out of the diagram to improve its readability:</p>
-<ol>
-	<li>The entering procedure (right branch in the picture) can be started only if there is at least one <k>vacant</k> parking slot, else the trolley must remain idle (the number, position and status of the parking slots must be properly checked and updated);</li>
-	<li>The trolley must not start the exiting procedure (left branch in the picture) if the <kc>OUTDOOR-area</kc> is occupied (this requirement is already fulfilled by the behavior of the <ks>acceptOUT</ks> within <kc>ParkServiceGUI</kc>).</li>
-	<li>The execution of the automaton must be carried on only if the trolley is <k>not stopped</k> by the manager, else its state must not change.</li>
-</ol>
+<p>Regardless of the current state, the execution of the automaton must be <k>stopped</k> whenever the manager gives the relative signal. When the manager gives the resume signal, the automaton must resume its evolution from where it was interrupted.</p>
+
+<p>In states <kc>acceptIN</kc> and <kc>acceptOut</kc>, if the conditions to process the relative requests are not met, their processing must be postponed. While the trolley is stopped, new enter and exit requests by clients are not postponed, they are instead refused (with proper notice).</p>
+
+<p>The additional tasks <k>monitor</k> and <k>manage</k> must respectively update the <kc>ParkServiceStatusGUI</kc> with the current status of the system and accept the request by the manager to stop or resume the behavior of the trolley.</p>
 
 <h4>Driving the trolley</h4>
 
-<p>The <kc>Robot Driver</kc> is responsible for the actuation of trolley movements on the provided virtual environment <kc>WEnv</kc>. This actor receives high level <k>dispatches</k> from the main business logic stating where the trolley has to go and converts them in a series of elemental steps. It then signals back the business logic when each relocation of the trolley has been completed.</p>
+<p>To access the <kc>WEnv</kc> (the virtual environment provided by the customer), it should be considered the usage of a more sophisticated tool, already available, called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html#IssWsHttpKotlinSupport">Basic Step Robot Actor</a>, which would be able to avoid interferences among overlapping commands and to natively receive movement orders expressed as steps. A new service, for now called <kc>RobotProxy</kc>, may be required to ensure compatibility between our system and the legacy tool <kc>Basic Step Robot Actor</kc>.</p>
+
+<p>An already available singleton object called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.planner20/userDocs/LabPlanner.html#plannerUtil">Planner Util</a> is able to plan the route to drive a robot to a specified spot avoiding obstacles, if provided with a map such as the one made available by the customer. This tool may be extended by a new component, which we will call <kc>Directional Planner</kc>, to add the functionality to plan the desired orientation of the robot alongside its desired position (so when the movement is complete, the trolley is also oriented toward the desired direction).</p>
 
 <center><img src="./img/trolley_driving.png" width="500px"></center>
 
-<p>An already available singleton object called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.planner20/userDocs/LabPlanner.html#plannerUtil">Planner Util</a> is able to plan the route to drive a robot to a specified spot avoiding obstacles, if provided with a map such as the one made available by the customer. This tool should be extended by a new component, which we will call <kc>Directional Planner</kc>, to add the functionality to plan the desired orientation of the robot alongside its desired position (so when the movement is complete, the trolley is also oriented toward the desired direction). To carry out its duties, the <kc>Robot Driver</kc> should leverage this new utility.</p>
+<p>The <kc>WEnv</kc> requires a <k>request-reply</k> communication paradigm. Even if some intermediate steps will probably favor different approaches, the replies from the <kc>WEnv</kc> should nevertheless be always brought back to the actor that originated the relative requests.</p>
 
-<p>To access the <kc>WEnv</kc> it should be considered the possibility to use a more sophisticated tool, already available, called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html#IssWsHttpKotlinSupport">Basic Step Robot Actor</a>, which would be able to avoid interferences among overlapping commands and to natively receive movement orders expressed as steps. A new service, for now called <kc>RobotProxy</kc>, may be required to ensure compatibility between our <kc>RobotDriver</kc> and the legacy tool <kc>Basic Step Robot Actor</kc>.</p>
-
-<p>The <kc>WEnv</kc> requires a <k>request-reply</k> communication paradigm. Even if some intermediate steps will probably favor different approaches, the responses from the <kc>WEnv</kc> should nevertheless be always brought back to the <kc>Robot Driver</kc>.</p>
+<h3>Workplan</h3>
+<p>LISTA DI PRIORITÀ PER GLI SPRINT E TEMPI DI SVILUPPO</p>
 
 <h3>Refined test plan</h3>
 <p>OGNI TEST PLAN DEVE ESSERE COLLEGATO AD UNA SPECIFICA USER STORY</p>
