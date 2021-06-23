@@ -360,7 +360,6 @@ with the code and the related documents.</li>
 			<li>a squared robot of side <ks>RD</ks> able to pick up a car and transport it from a point of the map to another;</li>
 			<li>the robot picks up and puts down cars from the square in front of it;</li>
 			<li>while the car is on the robot, they fill the same space on the map;</li>
-			<li>for this purpose, the customer provided his own <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html">virtual robot</a>;</li>
 		</ul>
     <li><k>Home:</k> the home location of the <kc>trolley</kc> is the north-western corner of the parking-area, facing south;</li>
     <li><k>Parking-area:</k> rectangular empty room containing the <kc>parking-slots</kc>, the home location and some maneuvering space for the <kc>trolley</kc>;</li>
@@ -386,12 +385,12 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 <ol>
     <li>The system to be built will be a distributed system, consisting of several macro-components:</li>
     <ul>
-        <li>the <k>transport trolley</k> (and its <k>virtual environment</k>);</li>
+        <li>the <k>transport trolley</k> (and its <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html">virtual environment</a>, provided by the customer);</li>
         <li>the <k>weight sensor</k>;</li>
         <li>the <k>thermometer</k>;</li>
         <li>the <k>fan</k>;</li>
         <li>the <k>outsonar</k>;</li>
-        <li><k>our application</k> (ParkManagerService, complete with its two <k>GUIs</k>), which sends commands to the trolley in order to meet the requirements.</li>
+        <li>our <k>application</k> (ParkManagerService, complete with its two GUIs), which sends commands to the trolley in order to meet the requirements.</li>
     </ul>
 	<li>This distributed system, made of several heterogeneous components, would benefit greatly from an <k>actor-based</k> framework with support for <k>message-passing</k> interaction; for this purpose, we should leverage the available <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.qakactor/userDocs/LabQakIntro2021.html#qakoverview">QAK meta-model</a> to build executable models;</li>
 	<li>Since the available map measures the <kc>parking-area</kc> in squares of side length <ks>RD</ks> (same as trolley size), the communication with the virtual robot should follow the <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.boundaryWalk/userDocs/BoundaryWalk.html#aril">aril convention</a>;</li>
@@ -437,12 +436,12 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 <ol>
 	<li>The <k>PARKING SLOT</k> button is needed to notify the interest by a client in <k>entering</k> its car in the <kc>parking-area</kc> and to receive the number <ks>SLOTNUM</ks> of a free <kc>parking-slot</kc> (between 1 and 6). If <ks>SLOTNUM</ks> is equal to 0, it means that no free slot is available.</li>
 	<li>The <k>CARENTER</k> button can be pressed only if <ks>SLOTNUM</ks> is greater than 0, so that the <kc>transport trolley</kc> may take the car from the <kc>INDOOR</kc> to the assigned <kc>parking-slot</kc>. Then it would show the client a receipt that includes the unique <ks>TOKENID</ks> that will be needed later to pick up the car.</li>
-	<li>The <k>PICK UP THE CAR</k> button is needed to <k>pick up</k> the car with the <ks>TOKENID</ks> received before, which neeeds to be written in its specific section under the button. The client's car will then be moved to the <kc>OUTDOOR-area</kc>.</li>
+	<li>The <k>PICK UP THE CAR</k> button is needed to <k>pick up</k> the car with the <ks>TOKENID</ks> received before, which needs to be written in its specific section under the button. The client's car will then be moved to the <kc>OUTDOOR-area</kc>.</li>
 </ol>
 
 <center><img src="./img/parkservicegui.png" width="500px"></center>
 
-<p>The <kc>ParkServiceStatusGUI</kc> has a grid with the <kc>parking-area</kc> status (red rectangles are occupied <kc>parking-slots</kc>), a section with the <kc>transport trolley</kc> status (idle, working or stopped)and a dedicated section for the <k>temperature</k>, in which you can see and manage the <k>fan</k> status when it is necessary with the use of three buttons: <k>start</k>, <k>stop</k> and <k>auto</k> (to automate the behavior of the fan); here you can also suspend and resume the behavior of the <kc>trolley</kc></trolley> with the <k>start</k> and <k>stop</k> buttons. At last, there is also a rectangle in which <k>alarms</k> appear.</p>
+<p>The <kc>ParkServiceStatusGUI</kc> has a grid with the <kc>parking-area</kc> status (red rectangles are occupied <kc>parking-slots</kc>), a section with the <kc>transport trolley</kc> status (idle, working or stopped) and a dedicated section for the <k>temperature</k>, in which you can see and manage the <k>fan</k> status when it is necessary with the use of three buttons: <k>start</k>, <k>stop</k> and <k>auto</k> (to automate the behavior of the fan); here you can also suspend and resume the behavior of the <kc>trolley</kc></trolley> with the <k>start</k> and <k>stop</k> buttons. At last, there is also a rectangle in which <k>alarms</k> appear.</p>
 
 <center><img src="./img/parkservicestatusgui.png" width="600px"></center>
 
@@ -454,15 +453,13 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <p>The <ks>goto</ks> outputs should be delivered to an entity able to perform the implied set of elementary actions on the <kc>trolley</kc>.</p>
 
-<p>Regardless of the current state, the execution of the automaton must be <k>stopped</k> whenever the manager gives the relative signal. When the manager gives the resume signal, the automaton must resume its evolution from where it was interrupted.</p>
+<p>The additional task <k>manage</k> must ensure that, regardless of the current state, the execution of the automaton gets <k>stopped</k> whenever the manager gives the relative signal. When the manager gives the resume signal, the automaton must resume its evolution from where it was interrupted. Moreover, the additional task <k>monitor</k> must update the <kc>ParkServiceStatusGUI</kc> with the current status of the system.</p>
 
 <p>In states <kc>acceptIN</kc> and <kc>acceptOut</kc>, if the conditions to process the relative requests are not met, their processing must be postponed. While the <kc>trolley</kc> is stopped, new enter and exit requests by clients are not postponed, they are instead refused (with proper notice).</p>
 
-<p>The additional tasks <k>monitor</k> and <k>manage</k> must respectively update the <kc>ParkServiceStatusGUI</kc> with the current status of the system and accept the request by the manager to stop or resume the behavior of the <kc>trolley</kc>.</p>
-
 <h4>Driving the trolley</h4>
 
-<p>To access the <kc>WEnv</kc> (the virtual environment provided by the customer), it should be considered the usage of a more sophisticated tool, already available, called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html#IssWsHttpKotlinSupport">Basic Step Robot Actor</a>, which would be able to avoid interferences among overlapping commands and to natively receive movement orders expressed as steps. A new service, for now called <kc>RobotProxy</kc>, may be required to ensure compatibility between our system and the legacy tool <kc>Basic Step Robot Actor</kc>.</p>
+<p>To access the <kc>WEnv</kc> (the virtual environment provided by the customer), it should be considered the usage of a more sophisticated tool, already available, called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.kotlinSupports/userDocs/ActorWithKotlinSupport.html#IssWsHttpKotlinSupport">Basic Step Robot Actor</a>, which would be able to avoid interferences among overlapping commands and to natively receive movement orders expressed as steps. A new service, for now called <kc>Robot Proxy</kc>, may be required to ensure compatibility between our system and the legacy tool <kc>Basic Step Robot Actor</kc>.</p>
 
 <p>An already available singleton object called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.planner20/userDocs/LabPlanner.html#plannerUtil">Planner Util</a> is able to plan the route to drive a robot to a specified spot avoiding obstacles, if provided with a map such as the one made available by the customer. This tool may be extended by a new component, which we will call <kc>Directional Planner</kc>, to add the functionality to plan the desired orientation of the robot alongside its desired position (so when the movement is complete, the <kc>trolley</kc> is also oriented toward the desired direction).</p>
 
@@ -478,65 +475,64 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <p>The system requires the presence of a timed alarm for when the <kc>OUTDOOR-area</kc> has not been cleared within <ks>DTFREE</ks> time from the beginning of its occupation. The system also suggests the presence of a second alarm for when <ks>TA</ks> exceeds <ks>TMAX</ks> and some kind of notification for when <ks>TA</ks> goes back into its normal low temperature range.</p>
 
-<p>We suggest the presence of two <k>proactive</k> actors, one for the <kc>OUTDOOR</kc> and one for the temperature, that fire an <k>event</k> each time they have an alarm or a notification to report. For the actor requiring temporization, it is available a legacy component called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.cautiousExplorer/userDocs/cautiousExplorerActors.html#project">TimerActor</a> that may be leveraged for this purpose. The diagram hereunder presented report this conceptual interaction:</p>
+<p>We suggest the presence of two <k>proactive</k> actors, one for the <kc>OUTDOOR</kc> and one for the temperature, that fire an <k>event</k> each time they have an alarm or a notification to report. For the actor requiring temporization, it is available a legacy component called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.cautiousExplorer/userDocs/cautiousExplorerActors.html#project">TimerActor</a> that may be leveraged for this purpose. The diagram hereunder presented reports this conceptual interaction:</p>
 
 <center><img src="./img/alarms.png" width="600px"></center>
 
 <h3>Workplan</h3>
-<p>Based on what was discussed in this initial phase, it was concluded that 3 sprints will be needed for the design of this application.</p>
+<p>Based on what was discussed in this initial phase, it was concluded that there will be needed <k>4 sprints</k> for the design of this application.</p>
 <h4>Sprint 1</h4>
 <ul>
 	<li>Main business logic with just one parking-slot;</li>
 	<li>Communication with the virtual robot;</li>
 	<li>ParkServiceGUI for the clients;</li>
-	<li>As soon as the system starts, the trolley goes to the INDOOR, takes in the car, parks it and goes back to its home; then, after a prefixed amount of time, the trolley takes the car from the parking-slot, takes it to the OUTDOOR and goes back to its home;</li>
-	<li>There are no sensors at this point.</li>
+	<li>As soon as the system starts, the trolley goes to the INDOOR, takes in the car, parks it and goes back to its home; then, after a prefixed amount of time, the trolley takes the car from the parking-slot, brings it to the OUTDOOR and goes back to its home (there are no sensors at this point);</li>
 </ul>
-<p>This sprint will start on July the 19th and we expect it to be completed within 3 working days.</p>
+<p>This sprint will start on <k>July the 19th</k> and we expect it to be completed within <k>3 working days</k>.</p>
 <h4>Sprint 2</h4>
 <ul>
 	<li>Weightsensor, outsonar and thermometer;</li>
 	<li>Fan with manual control only;</li>
 	<li>ParkServiceStatusGUI for the parking-manager (the buttons to start and stop the trolley are disabled).</li>
 </ul>
-<p>We expect this sprint to be completed within 4 working days.</p>
+<p>We expect this sprint to be completed within <k>4 working days</k>.</p>
 <h4>Sprint 3</h4>
 <ul>
 	<li>Possibility to start and stop the behavior of the trolley;</li>
 	<li>Support for all the six parking-slots.</li>
 </ul>
-<p>We expect this sprint to be completed within 3 working days.</p>
+<p>We expect this sprint to be completed within <k>3 working days</k>.</p>
 <h4>Sprint 4</h4>
 <ul>
 	<li>OUTDOOR-area alarm and temperature alarm;</li>
 	<li>Option to automate the control of the fan;</li>
 	<li>Support for the real sonar device.</li>
 </ul>
-<p>We expect this sprint to be completed within 4 working days and the whole project to be finished by August the 4th.</p>
+<p>We expect this sprint to be completed within <k>4 working days</k> and the whole project to be finished by <k>August the 4th</k>.</p>
 
 <h3>Refined test plan</h3>
 <h4>User story 1 - parking phase</h4>
 <ul>
-	<li>In case of occupied INDOOR-area, when the client presses the "PARKING SLOT" button he receives a notification that no request can be sent.</li>
-	<li>The INDOOR-area is free and the client uses the "PARKING SLOT" button, the business logic processes the request and the SLOTNUM is displayed in the GUI itself.</li>
-	<li>If SLOTNUM > 0, then the client presses the "CARENTER" button and the transport trolley positions itself in the INDOOR-area and then in the slot previously indicated by SLOTNUM. Then that specific parking slot changes status and is shown as occupied in the ParkServiceStatusGUI table. Finally, the transport trolley returns to its home. At that point, a receipt with a TOKENID is shown to the client on the screen.</li>
+	<li>In case of occupied INDOOR-area, when the client presses the <ks>PARKING SLOT</ks> button he receives a notification that no request can be sent.</li>
+	<li>The INDOOR-area is free and the client uses the <ks>PARKING SLOT</ks> button, the business logic processes the request and the SLOTNUM is displayed in the GUI itself.</li>
+	<li>If SLOTNUM > 0, then the client presses the <ks>CARENTER</ks> button and the transport trolley positions itself in the INDOOR-area and then in the slot previously indicated by SLOTNUM. Then that specific parking slot changes status and is shown as occupied in the ParkServiceStatusGUI table. Finally, the transport trolley returns to its home. At that point, a receipt with a TOKENID is shown to the client on the screen.</li>
 	<li>If SLOTNUM = 0, a message is shown on the screen indicating that there is no space in the parking-area and, if the client decides to wait for its turn, as soon as SLOTNUM > 0 then his request is processed as in the previous case.</li>
-	<li>If the transport trolley status is stopped and the client presses the "CARENTER" button, the request is rejected and the client is notified.</li>
+	<li>If the transport trolley status is stopped and the client presses the <ks>CARENTER</ks> button, the request is rejected and the client is notified.</li>
 </ul>
 
 <h4>User story 2 - car pick up phase</h4>
 <ul>
-	<li>When the client presses the "PICK UP THE CAR" button, the request to enter the TOKENID is shown on the screen. If the code entered exists and is correct and the OUTDOOR-area is free, the transport trolley goes to the parking-slot (associated to that TOKENID) and then to the OUTDOOR-area. Finally it returns to home. Then that specific parking-slot will change status and will be shown as free in the ParkServiceStatusGUI table.</li>
-	<li>If the OUTDOOR-area is occupied, when the client presses the "PICK UP THE CAR" button, he receives a notification that no request can be sent. As soon as the area is free, his request will be processed as in the previous case.</li>
+	<li>When the client presses the <ks>PICK UP THE CAR</ks> button, the request to enter the TOKENID is shown on the screen. If the code entered exists and is correct and the OUTDOOR-area is free, the transport trolley goes to the parking-slot (associated to that TOKENID) and then to the OUTDOOR-area. Finally it returns to home. Then that specific parking-slot will change status and will be shown as free in the ParkServiceStatusGUI table.</li>
+	<li>If the OUTDOOR-area is occupied, when the client presses the <ks>PICK UP THE CAR</ks> button, he receives a notification that no request can be sent. As soon as the area is free, his request will be processed as in the previous case.</li>
 	<li>If the entered code does not exist or is not correct, then an error message will be shown on the screen and the client will have to re-enter the TOKENID.</li>
-	<li>If the transport trolley status is stopped and the client presses the "PICK UP THE CAR" button, the request is rejected and the client is notified.</li>
+	<li>If the transport trolley status is stopped and the client presses the <ks>PICK UP THE CAR</ks> button, the request is rejected and the client is notified.</li>
 </ul>
 
 <h4>User story 3 - parking-manager</h4>
 <ul>
-	<li>When the parking manager presses the "START" button in the fan area, the mock of the fan declares to have turned on and the fan status changes to START. When the "STOP" button is pressed and the fan declares that it has turned off, the fan status changes to STOP.</li>
-	<li>When the "AUTO" button has been pressed and the temperature rises above TMAX, the fan activates itself and the fan status changes to START. When the temperature value returns below TMAX, the fan turns off and the fan status changes to STOP.</li>
-	<li>When the parking manager presses the "START" button in the transport trolley area, the latter stops working and its status in the ParkServiceStatusGUI changes to START. When he then presses the "STOP" button, the transport trolley resumes its work and its status becomes STOP.</li>
+	<li>When the parking manager presses the <ks>START</ks> button in the fan area, the mock of the fan declares to have turned on and the fan status changes to START. When the <ks>STOP</ks> button is pressed and the fan declares that it has turned off, the fan status changes to STOP.</li>
+	<li>When the <ks>AUTO</ks> button has been pressed and the temperature rises above TMAX, the fan activates itself and the fan status changes to START. When the temperature value returns below TMAX, the fan turns off and the fan status changes to STOP.</li>
+	<li>When the parking manager presses the <ks>START</ks> button in the transport trolley area, the latter stops working and its status in the ParkServiceStatusGUI changes to START. When he then presses the <ks>STOP</ks> button, the transport trolley resumes its work and its status becomes STOP.</li>
 	<li>When the OUTDOOR-area remains occupied more than the DTFREE time interval, then an alarm message is shown on the screen. As soon as the OUTDOOR-area is free again, the error message is no longer shown.</li>
 	<li>When the temperature is higher than TMAX, an alarm message is shown on the screen. As soon as the temperature is again lower than the threshold value, the error message is no longer shown.</li>
 </ul>
@@ -587,11 +583,11 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 <br/>
 </div>
 
-<div style="background-color: #b2c0ff; color: #242424; clear: left; font: 100% Tahoma, Helvetica, Arial, sans-serif; margin-bottom: 0.5em; padding-top: 0.5em; border-radius: 10px; padding: 5px;">
+<div style="background-color: #b2c0ff; color: #242424; clear: left; font: 100% Tahoma, Helvetica, Arial, sans-serif; margin-bottom: 0.5em; padding-top: 0.5em; border-radius: 10px; padding: 5px; font-size: 15px;">
 	<span style="color:crimson;font-weight:bold;">
 		By: Giacomo Fantazzini and Claudia Badalamenti<br>
 		Email: giacomo.fantazzini2@studio.unibo.it - claudia.badalamenti@studio.unibo.it<br>
-		<center><img src="./img/foto_fantazzini.jpg" width="120px"><img src="./img/foto_claudia.jpeg" width="120px"></center>
+		<center><img src="./img/foto_fantazzini.jpg" width="120px", height="160"> <img src="./img/foto_claudia.jpeg" width="120px", height="160"></center>
 	</span>
 </div>
 </body>
