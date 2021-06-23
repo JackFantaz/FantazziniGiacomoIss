@@ -17,20 +17,69 @@ class Businesslogicactor ( name: String, scope: CoroutineScope  ) : ActorBasicFs
 	@kotlinx.coroutines.ExperimentalCoroutinesApi			
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		
-				val notice = "richiesta accettata"
-				val slotnum = 1
+		        val notice = "richiesta accettata"
+		        var slotnum = 1
+		        val tokenid = 1
 		return { //this:ActionBasciFsm
 				state("moveToHome") { //this:State
 					action { //it:State
-						forward("goto", "goto(outdoor)" ,"trolleyactor" ) 
+						forward("goto", "goto(home)" ,"trolleyactor" ) 
 					}
-					 transition(edgeName="t0",targetState="acceptIN",cond=whenDispatch("movementDone"))
+					 transition(edgeName="t0",targetState="acceptIN",cond=whenEvent("indoorOccupied"))
 				}	 
 				state("acceptIN") { //this:State
 					action { //it:State
+					}
+					 transition( edgeName="goto",targetState="informIN", cond=doswitch() )
+				}	 
+				state("informIN") { //this:State
+					action { //it:State
+						if(  slotnum==1  
+						 ){ slotnum--  
+						}
+						forward("msgInform", "msgInform(slotnum)" ,"parkservicegui" ) 
+					}
+					 transition( edgeName="goto",targetState="moveToIn", cond=doswitch() )
+				}	 
+				state("moveToIn") { //this:State
+					action { //it:State
+						forward("goto", "goto(indoor)" ,"trolleyactor" ) 
+					}
+					 transition(edgeName="t1",targetState="receipt",cond=whenDispatch("movementDone"))
+				}	 
+				state("receipt") { //this:State
+					action { //it:State
+						forward("msgInform", "msgInform(tokenid)" ,"parkservicegui" ) 
+					}
+					 transition( edgeName="goto",targetState="moveToSlotIn", cond=doswitch() )
+				}	 
+				state("moveToSlotIn") { //this:State
+					action { //it:State
 						forward("goto", "goto(parking)" ,"trolleyactor" ) 
 					}
-					 transition(edgeName="t1",targetState="moveToHome",cond=whenDispatch("movementDone"))
+					 transition(edgeName="t2",targetState="moveToHome",cond=whenDispatch("movementDone"))
+				}	 
+				state("acceptOUT") { //this:State
+					action { //it:State
+					}
+					 transition( edgeName="goto",targetState="findSlot", cond=doswitch() )
+				}	 
+				state("findSlot") { //this:State
+					action { //it:State
+					}
+					 transition( edgeName="goto",targetState="moveToSlotOut", cond=doswitch() )
+				}	 
+				state("moveToSlotOut") { //this:State
+					action { //it:State
+						forward("goto", "goto(parking)" ,"trolleyactor" ) 
+					}
+					 transition(edgeName="t3",targetState="moveToOut",cond=whenDispatch("movementDone"))
+				}	 
+				state("moveToOut") { //this:State
+					action { //it:State
+						forward("goto", "goto(outdoor)" ,"trolleyactor" ) 
+					}
+					 transition(edgeName="t4",targetState="moveToHome",cond=whenDispatch("movementDone"))
 				}	 
 			}
 		}

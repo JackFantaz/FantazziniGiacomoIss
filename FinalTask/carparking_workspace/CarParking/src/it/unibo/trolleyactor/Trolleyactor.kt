@@ -45,7 +45,7 @@ class Trolleyactor ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 						stateTimer = TimerActor("timer_idle", 
 							scope, context!!, "local_tout_trolleyactor_idle", 500.toLong() )
 					}
-					 transition(edgeName="t2",targetState="working",cond=whenTimeout("local_tout_trolleyactor_idle"))   
+					 transition(edgeName="t5",targetState="working",cond=whenTimeout("local_tout_trolleyactor_idle"))   
 				}	 
 				state("working") { //this:State
 					action { //it:State
@@ -58,8 +58,8 @@ class Trolleyactor ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 						 {forward("movementDone", "movementDone(0)" ,"businesslogicactor" ) 
 						 }
 					}
-					 transition(edgeName="t3",targetState="working",cond=whenDispatch("endmove"))
-					transition(edgeName="t4",targetState="idle",cond=whenDispatch("goto"))
+					 transition(edgeName="t6",targetState="working",cond=whenDispatch("endmove"))
+					transition(edgeName="t7",targetState="idle",cond=whenDispatch("goto"))
 				}	 
 			}
 		}
