@@ -12,8 +12,12 @@ class DirectionalPlanner(map: String) {
     init {
         plannerUtil.initAI()
         plannerUtil.loadRoomMap(map)
-        plannerUtil.showMap()
+        //plannerUtil.showMap()
     }
+	
+	fun planFor(place: Array<String>) {
+		planForGoal(place[0], place[1], place[2])
+	}
 
     fun planForGoal(x: String, y: String, d: String) {
         plannerUtil.planForGoal(x, y)

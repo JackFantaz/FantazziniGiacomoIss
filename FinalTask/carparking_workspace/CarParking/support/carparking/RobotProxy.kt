@@ -15,6 +15,14 @@ class RobotProxy(private val master: ActorBasicFsm, wenvAddr: String) : ActorBas
 
     private val robot = BasicStepRobotActor("basicsteprobotactor", this, this.scope, wenvAddr)
 
+	fun doMove(move: String) {
+		when (move) {
+			"w" -> moveForward()
+			"l" -> rotateLeft()
+			"r" -> rotateRight()
+		}
+	}
+	
     fun moveForward() {
         robot.send(ApplMsgs.stepRobot_w(master.name))
     }
