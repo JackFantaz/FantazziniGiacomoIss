@@ -426,7 +426,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <h4>The user interfaces</h4>
 
-<p>The <kc>ParkManagerService</kc> app is composed of two GUIs: the <kc>ParkServiceGUI</kc>, used by clients, and the <kc>ParkServiceStatusGUI</kc>, used by the parking-manager. The GUIs should be controlled by two different and independent actors because they may not be hosted on the business logic node. They will probably not even run on the same node, because the physical device used by the client will likely not be the same device used by the manager.</p>
+<p>The <kc>ParkManagerService</kc> app is composed of two GUIs: the <kc>ParkServiceGUI</kc>, used by clients, and the <kc>ParkServiceStatusGUI</kc>, used by the parking-manager. The GUIs should be controlled by two different and independent actors because they may not be hosted on the business logic node. They will probably not even run on the same node, because the physical device used by the client will likely not be the same device used by the manager. If the designer chooses to build them with a Web framework, then the GUIs will act as websites and this constraint will probably not be required.</p>
 
 <center><img src="./img/gui_actor.png" width="500px"></center>
 
@@ -443,7 +443,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <p>The <kc>ParkServiceStatusGUI</kc> has a grid with the <kc>parking-area</kc> status (red rectangles are occupied <kc>parking-slots</kc>), a section with the <kc>transport trolley</kc> status (idle, working or stopped) and a dedicated section for the <k>temperature</k>, in which you can see and manage the <k>fan</k> status when it is necessary with the use of three buttons: <k>start</k>, <k>stop</k> and <k>auto</k> (to automate the behavior of the fan); here you can also suspend and resume the behavior of the <kc>trolley</kc></trolley> with the <k>start</k> and <k>stop</k> buttons. At last, there is also a rectangle in which <k>alarms</k> appear.</p>
 
-<center><img src="./img/parkservicestatusgui.png" width="600px"></center>
+<center><img src="./img/parkservicestatusgui.png" width="550px"></center>
 
 <h4>The business logic</h4>
 
