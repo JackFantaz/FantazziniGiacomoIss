@@ -402,9 +402,13 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <h3>Logical architecture</h3>
 
-<p>Each logical component should be modeled as an actor or split in two or more actors as expressed by the following general architecture (plus some minor actors introduced later):</p>
+<p>Each logical component should be modeled as an actor or split in two or more actors as expressed by the following general architecture:</p>
 
 <center><img src="./img/actors.png" width="600px"></center>
+
+<p>Moreover, here's the conceptual architecture of the alarms sub-system:</p>
+
+<center><img src="./img/alarms.png" width="600px"></center>
 
 <h4>The presence sensors</h4>
 
@@ -475,9 +479,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <p>The system requires the presence of a timed alarm for when the <kc>OUTDOOR-area</kc> has not been cleared within <ks>DTFREE</ks> time from the beginning of its occupation. The system also suggests the presence of a second alarm for when <ks>TA</ks> exceeds <ks>TMAX</ks> and some kind of notification for when <ks>TA</ks> goes back into its normal low temperature range.</p>
 
-<p>We suggest the presence of two <k>proactive</k> actors, one for the <kc>OUTDOOR</kc> and one for the temperature, that fire an <k>event</k> each time they have an alarm or a notification to report. For the actor requiring temporization, it is available a legacy component called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.cautiousExplorer/userDocs/cautiousExplorerActors.html#project">TimerActor</a> that may be leveraged for this purpose. The diagram hereunder presented reports this conceptual interaction:</p>
-
-<center><img src="./img/alarms.png" width="600px"></center>
+<p>We suggest the presence of two <k>proactive</k> actors, one for the <kc>OUTDOOR</kc> and one for the temperature, that fire an <k>event</k> each time they have an alarm or a notification to report. For the actor requiring temporization, it is available a legacy component called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.cautiousExplorer/userDocs/cautiousExplorerActors.html#project">TimerActor</a> that may be leveraged for this purpose.</p>
 
 <h3>Workplan</h3>
 <p>Based on what was discussed in this initial phase, it was concluded that there will be needed <k>4 sprints</k> for the design of this application.</p>
