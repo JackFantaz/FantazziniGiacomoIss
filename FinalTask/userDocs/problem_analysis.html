@@ -372,9 +372,35 @@ with the code and the related documents.</li>
 	<li><k>Hopefully / Optionally:</k> the corresponding requirements should be implemented and employable as an alternative to the default behavior.</li>
 </ul>
 
+<h3>Provided software and hardware</h3>
+
 <h4>The transport trolley</h4>
 
-<h4>Parking-area, INDOOR-area, OUTDOOR-area, parking-slots, home</h4>
+<p>The <k>trolley</k> is a direct-drive robot compatible in terms of interaction and behavior with the virtual environment <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html">WEnv</a> provided by the customer.</p>
+
+<p>Since every position in the <kc>parking-area</kc> is expressed as a multiple of the side <ks>RD</ks> of the <k>trolley</k>, the communication with the virtual robot should follow the <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.boundaryWalk/userDocs/BoundaryWalk.html#aril">aril</a> convention.</p>
+
+<h4>The parking-area and its points of interest</h4>
+
+<p>The customer provided a <k>map</k> of the <kc>parking-area</kc> in a <ks>textual format</ks>. Said map is partially compatible with an available legacy tool called <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.planner20/userDocs/LabPlanner.html#plannerUtil">PlannerUtil</a>, which is able to plan the route to drive a robot to a specified spot avoiding obstacles. Said tool, however, requires the <k>map</k> to be in a <ks>binary format</ks>. It should be made available as soon as possible a utility function to convert the representation of the <k>map</k>.</p>
+
+<p>The customer provided also a second description of the parking-area as a <ks>JavaScript</ks> configuration file compatible with the <kc>WEnv</kc>. An installation of the <kc>WEnv</kc> with said configuration should be made available as soon as possible for testing purposes.</p>
+
+<p>All the sensible spots in the <kc>parking-area</kc> are representable as <ks>pairs</ks> of coordinates on the map. However, while being not walkable over, the vast majority of them require a specific position and orientation of the <k>trolley</k>. It is indeed convenient to represent them not by their position, but by a <ks>triple</ks> representing the required <ks>position</ks> (in terms of X and Y) and <ks>orientation</ks> (in terms of N, S, W or E) of the <k>trolley</k> to properly operate on them.</p>
+
+<pre>
+Home Location:  [0, 0, S]
+INDOOR-area:    [6, 0, N]
+OUTDOOR-area:   [6, 4, S]
+Parking-slot 1: [1, 1, E]
+Parking-slot 2: [1, 2, E]
+Parking-slot 3: [1, 3, E]
+Parking-slot 4: [4, 1, W]
+Parking-slot 5: [4, 2, W]
+Parking-slot 6: [4, 3, W]
+</pre>
+
+<p>The <kc>PlannerUtil</kc> should be extended by a new component to add the functionality to plan the desired orientation of the robot alongside its desired position.</p>
 
 <h4>Weightsensor and outsonar</h4>
 
@@ -404,7 +430,6 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
         <li>our <k>application</k> (ParkManagerService, complete with its two GUIs), which sends commands to the trolley in order to meet the requirements.</li>
     </ul>
 	<li>This distributed system, made of several heterogeneous components, would benefit greatly from an <k>actor-based</k> framework with support for <k>message-passing</k> interaction; for this purpose, we should leverage the available <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.qakactor/userDocs/LabQakIntro2021.html#qakoverview">QAK meta-model</a> to build executable models;</li>
-	<li>Since the available map measures the <kc>parking-area</kc> in squares of side length <ks>RD</ks> (same as trolley size), the communication with the virtual robot should follow the <a href="http://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.boundaryWalk/userDocs/BoundaryWalk.html#aril">aril convention</a>;</li>
 	<li>There isn't any conceptual abstraction gap for this problem, however since we proposed to exploit the <k>QAK meta-model</k>, we are put in front of an <k>abstraction gap</k> regarding the use of languages because QAK relies on Java and Kotlin to work. However, QAK itself manages to fill a large part of this limitation, as it is supplied with its own domain specific language and because it was designed specifically for heterogeneous distributed systems;</li>
 	<li>The <k>QAK meta-model</k> provides compatibility with the communication protocols <ks>TCP</ks>, <ks>MQTT</ks> and <ks>CoAP</ks>, equally valid for the interaction between actors; regarding the communication with the <k>virtual environment</k>, both supported interaction models (<ks>HTTP POST</ks> and <ks>WebSocket</ks>) are fit for the task.</li>
 	<li>We will use the following <k>legend</k> for all the diagrams in the document:</li>
