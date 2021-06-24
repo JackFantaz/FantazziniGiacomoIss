@@ -603,8 +603,33 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 </div>
 
-<!--<h2>Test plans</h2>
+<h2>Test plans</h2>
+<div class="remark">
 
+
+	<center><k>This test plan is defined on the executable model of the problem analysis.</k></center>
+	INSERIRE IL LINK AL MODELLO ESEGUIBILE
+	<p>
+	The transport trolley is on home position initially, with coordinates [0, 0, S].
+	When the weightsensor button is pressed, an "indoorOccupied" event and an enter request are sent. So, the "slotnum" dispatch is sent and the INDOOR-area, with coordinates [6, 0, N], results occupied. The transport trolley starts its path going in that cell and a "tokenid" dispatch is sent. Then it goes on the only free parking-slot (the number 1, with coordinates [1, 1, E]) and comes back to home.<br>
+	Then an exit request is sent and transport trolley goes in front of the parking-slot in which the car was parked (simulating the pick up of the car).
+	It positions itself in front of the OUTDOOR-area, with coordinates [6, 4, S]. At last it comes back in its home.<br>
+	If the weightsensor button is pressed while the parking-slot 1 is occupied, the transport trolley mustn't go to the INDOOR-area to take the car.<br><br>
+
+	In this model, many kind of components are used and they are: ButtonMock, DirectionPlanner, LedMock, MapUtils and RobotProxy.<br>
+	<ks>ButtonMock</ks> and <ks>LedMock</ks> are took from LINK DEL FILE BUTTON-LED, while the <ks>DirectionalPlanner</ks> is an extension of the singleton object called Planner Util and already explained previously.
+	The <ks>RobotProxy</ks> ensures compatibility between our system and the legacy tool Basic Step Robot Actor
+	MAP UTIL NON SO CHE SCRIVERE SORRY
+	
+	</p>
+	
+	
+
+
+
+</div>
+
+<!--
 <div class="remark">
 <ol>
 <li>LINK AL CODICE JUNIT</li>
