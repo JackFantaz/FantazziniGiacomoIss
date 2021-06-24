@@ -386,7 +386,7 @@ with the code and the related documents.</li>
 
 <p>The customer provided also a second description of the parking-area as a <ks>JavaScript</ks> configuration file compatible with the <kc>WEnv</kc>. An installation of the <kc>WEnv</kc> with said configuration should be made available as soon as possible for testing purposes.</p>
 
-<p>All the sensible spots in the <kc>parking-area</kc> are representable as <ks>pairs</ks> of coordinates on the map. However, while being not walkable over, the vast majority of them require a specific position and orientation of the <k>trolley</k>. It is indeed convenient to represent them not by their position, but by a <ks>triple</ks> representing the required <ks>position</ks> (in terms of X and Y) and <ks>orientation</ks> (in terms of N, S, W or E) of the <k>trolley</k> to properly operate on them.</p>
+<p>All the sensible spots in the <kc>parking-area</kc> are representable as <ks>pairs</ks> of coordinates on the map. However, while being not walkable over, the vast majority of them require a specific position and orientation of the <k>trolley</k>. It is indeed convenient to represent them not by their position, but by a <ks>triple</ks> representing the required <ks>position</ks> (in terms of X and Y) and <ks>orientation</ks> (in terms of N, E, S or W) of the <k>trolley</k> to properly operate on them.</p>
 
 <pre>
 Home Location:  [0, 0, S]
@@ -400,38 +400,42 @@ Parking-slot 5: [4, 2, W]
 Parking-slot 6: [4, 3, W]
 </pre>
 
-<p>The <kc>PlannerUtil</kc> should be extended by a new component to add the functionality to plan the desired orientation of the robot alongside its desired position.</p>
+<p>The <kc>PlannerUtil</kc> should be extended by a new component to add the functionality to plan the desired orientation of the trolley alongside its desired position.</p>
 
 <h4>Weightsensor and outsonar</h4>
-<p>
-	For these entities, the customer clarifies that the <k>weightsensor</k> measures the <ks>weight of the car</ks> and the <k>outsonar</k> detects the <ks>presence of a car</ks> in the OUTDOOR-area, but doesn't provide code or physical objects to use. However, he specifies that both should be properly simulated by mock-objects or mock-actors.<br>
-	The <kc>INDOOR-area</kc> and the <kc>OUTDOOR-area</kc> are respectively equipped with a <ks>weightsensor</ks> and an <ks>outsonar</ks>. While being two physically different components, they serve the same logical function and thus they can be both modeled as <k>presence sensors</k> with appropriate <k>adapters</k>. We report hereunder a diagram to illustrate the conceptual taxonomy:</p>
+
+<p>The customer clarified that the <k>weightsensor</k> measures the <ks>weight of the car</ks> in the <kc>INDOOR-area</kc> and the <k>outsonar</k> detects the <ks>presence of a car</ks> in the <kc>OUTDOOR-area</kc>, but he doesn't provide code or physical devices to use. However, he specified that both should be properly simulated by mock-objects or mock-actors.</p>
+
+<p>While being two physically different components, the <k>weightsensor</k> and the <k>outsonar</k> serve the same logical function and thus they can be both modeled as <ks>presence sensors</ks> with appropriate <ks>adapters</ks>. We report hereunder a diagram to illustrate the conceptual taxonomy:</p>
 
 <center><img src="./img/presence_actor.png" width="500px"></center>
 
-<p>The sensor should be a queryable entity as to know if it does or does not detect a presence, therefore it will make use of some interfaces.
-	HC-SR04
-	/it.unibo.raspIntro2020/userDocs/LabRaspiIntro.html
-</p>
+<p>These sensors should be <ks>queryable entities</ks> as to know if they does or does not detect a presence. They should also be put behind some kind of interface.</p>
+
+<em>HC-SR04 @ ss/it.unibo.raspIntro2020/userDocs/LabRaspiIntro.html</em>
 
 <h4>Thermometer and Fan</h4>
-<p>
-	For these entities, the customer clarifies that the <k>thermometer</k> measures the <ks>temperature of the area</ks> and about the <k>fan</k> doesn't specify its behavior, furthermore he doesn't provide code or physical objects to use. Anyway, he specifies that both should be properly simulated by mock-objects or mock-actors.<br>
-	Concerning the significance of a <kc>variation in temperature</kc>, it is worth noting that most general purpose sensors have a sensibility of <ks>0.1 °C</ks>.<br>
-	The <kc>fan</kc> should be a passive component able to start and stop the device when notified to do so. It leans on some kind of interfaces to communicate to the gui.
-</p>
+
+<p>The customer clarified that the <k>thermometer</k> measures the <ks>temperature of the area</ks> and about the <k>fan</k> he doesn't specify its behavior. Furthermore, he doesn't provide code or physical devices to use. However, he specified that both should be properly simulated by mock-objects or mock-actors.</p>
+
+<p>Much like the sonar and the weight sensor, the <k>thermometer</k> should be a <ks>queryable component</ks> put behind some kind of interface. The <k>fan</k> should be a passive component able to start and stop the device when <ks>notified</ks> to do so and it should be put behind an interface, too.</p>
+
+<em>Concerning the significance of a <kc>variation in temperature</kc>, it is worth noting that most general purpose sensors have a sensibility of <ks>0.1 °C</ks>. It leans on some kind of interfaces to communicate to the gui.</em>
 
 <h4>ParkServiceGUI and ParkServiceStatusGUI</h4>
-<p>
-	The <k>ParkServiceGUI</k> (used by clients) and the <k>ParkServiceStatusGUI</k> (used by the parking-manager) are provided by the ParkManagerService. The customer has intended that the two GUIs must be available entities that function on many devices; so they are to be considered web GUIs.
-</p>
+
+<em>The <k>ParkServiceGUI</k> (used by clients) and the <k>ParkServiceStatusGUI</k> (used by the parking-manager) are provided by the <kc>ParkManagerService</kc>.</em>
+
+<p>The customer has intended that the two GUIs must be very available entities able to function on many devices. They are likely best to be designed as <ks>Web GUIs</ks>.</p>
 
 <h3>User stories</h3>
 
 The <a href="#requirements_user_stories">user stories</a> provided by the customer are sufficiently precise and complete and they do not need immediate elaboration.
 
 <h3>Informal test plan</h3>
+
 The <a href="#requirements_requirements">requirement details</a> provided by the customer are accurate enough to act as an informal test plan on their own.
+
 </div>
 
 <h2>Problem analysis</h2>
@@ -440,7 +444,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 <ol>
     <li>The system to be built will be a distributed system, consisting of several macro-components:</li>
     <ul>
-        <li>the <k>transport trolley</k> (and its <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/anatali/issLab2021/main/it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html">virtual environment</a>, provided by the customer);</li>
+        <li>the <k>transport trolley</k>;</li>
         <li>the <k>weight sensor</k>;</li>
         <li>the <k>thermometer</k>;</li>
         <li>the <k>fan</k>;</li>
@@ -470,7 +474,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <center><img src="./img/presence_actor.png" width="500px"></center>
 
-<p>The sensor entity should be queryable as to know if it does or does not detect a presence. 
+<p>The sensor entity should be queryable as to know if it does or does not detect a presence.
 -->
 <p>The actor using the sensor entity (one for each sensor) should poll the presence within a fixed interval of time and fire an <k>event</k> each time the status changes from present to not-present (or the other way around). These actors thus present <k>proactive</k> behavior.</p>
 
@@ -480,7 +484,7 @@ The <a href="#requirements_requirements">requirement details</a> provided by the
 
 <p>Much like the sonar and the weight sensor, the <ks>thermometer</ks> should be a queryable component encapsulated into a <k>proactive</k> actor that polls the temperature and fires an <k>event</k> with the new temperature value each time it varies <k>significantly</k>.
 
-<!--The <ks>fan</ks> should be a passive component able to start and stop the device when notified to do so. 
+<!--The <ks>fan</ks> should be a passive component able to start and stop the device when notified to do so.
 -->
 <p>The <ks>fan</ks> actor is <k>reactive</k> in nature and should be able to receive <k>dispatches</k> and update the status of the fan according to them.</p>
 
