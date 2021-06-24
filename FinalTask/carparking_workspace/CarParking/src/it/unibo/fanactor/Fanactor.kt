@@ -16,19 +16,19 @@ class Fanactor ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, s
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
 	@kotlinx.coroutines.ExperimentalCoroutinesApi			
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
-		 val mock = carparking.LedMock("Fan")  
+		 val mock = carparking.LedMock("Fan", 350, 250)  
 		return { //this:ActionBasciFsm
 				state("stop") { //this:State
 					action { //it:State
 						mock.turnOff(  )
 					}
-					 transition(edgeName="t8",targetState="start",cond=whenDispatch("fanStart"))
+					 transition(edgeName="t16",targetState="start",cond=whenDispatch("fanStart"))
 				}	 
 				state("start") { //this:State
 					action { //it:State
 						mock.turnOn(  )
 					}
-					 transition(edgeName="t9",targetState="stop",cond=whenDispatch("fanStop"))
+					 transition(edgeName="t17",targetState="stop",cond=whenDispatch("fanStop"))
 				}	 
 			}
 		}

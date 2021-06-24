@@ -1,11 +1,20 @@
+/*
+ *   Automated Car-Parking
+ *   EXECUTABLE MODEL COMPLIANT WITH THE PROBLEM ANALYSIS
+ *   by Giacomo Fantazzini and Claudia Badalamenti
+ *
+ * */
+
 System carparking
 
 Dispatch goto : goto(PLACE)
 Dispatch movementDone : movementDone(N)
 Dispatch fanStart : fanStart(N)
 Dispatch fanStop : fanStop(N)
-Dispatch endmove : endmove(X)
-Dispatch msgInform : msgInform(N)
+Dispatch endmove : endmove(N)
+Dispatch notice : notice(NOTICE)
+Dispatch slotnum : slotnum(SLOTNUM)
+Dispatch tokenid : tokenid(TOKENID)
 
 Event temperature : temperature(VALUE)
 Event outdoorCleared : outdoorCleared(N)
@@ -19,68 +28,51 @@ Event temperatureAlarmRevoked : temperatureAlarmRevoked(N)
 
 Context ctxcarparking ip[host="localhost" port=60000]
 
-CodedQActor sonaractor context ctxcarparking className "carparking.SonarActor"
-CodedQActor weightactor context ctxcarparking className "carparking.WeightActor"
-CodedQActor thermometeractor context ctxcarparking className "carparking.ThermometerActor"
+QActor parkmanagerserviceactor context ctxcarparking {
 
-/*QActor businesslogicactor context ctxcarparking {
-	
-	[#
-		val notice = "richiesta accettata"
-		val slotnum = 1
-	#]
-	
-	State moveToHome initial {
+    [# var slotnum = 1 #]
 
-		forward trolleyactor -m goto : goto(outdoor)
-	} Transition t whenMsg movementDone -> acceptIN
-					//whenTime 5000 -> acceptIN
-	
-	State acceptIN {
-		forward trolleyactor -m goto : goto(parking)
-	} Transition t whenMsg movementDone -> moveToHome
-					//whenTime 5000 -> moveToHome
-}*/
-
-QActor businesslogicactor context ctxcarparking {
-    
-    [#
-        val notice = "richiesta accettata"
-        var slotnum = 1
-        val tokenid = 1
-    #]
-    
-    State moveToHome initial {
+    State moveToHome_enter initial {
+    	delay 1000
         forward trolleyactor -m goto : goto(home)
-    } Transition t whenEvent indoorOccupied -> acceptIN
-                        
+    } Transition t whenEvent indoorOccupied -> acceptIN // enter request
+	
+    State moveToHome_exit {
+    	delay 1000
+        forward trolleyactor -m goto : goto(home)
+    } Transition t whenTime 5000 -> acceptOUT // exit request with TOKENID
+                  
     State acceptIN {
-        
-    } Goto informIN 
-    
+        forward parkserviceguiactor -m notice : notice(enter_request_accepted)
+    } Goto informIN // if INDOOR-area free else moveToHome
+
     State informIN {
-        if [# slotnum==1 #] { [# slotnum-- #] }
-        forward parkservicegui -m msgInform : msgInform(slotnum)
-    } Goto moveToIn
-        
+        if [# slotnum > 0 #] {
+        	forward parkserviceguiactor -m slotnum : slotnum(1)
+        	// slotnum--
+        }
+    } Goto moveToIn if [# slotnum > 0 #] else moveToHome_enter
+
     State moveToIn {
         forward trolleyactor -m goto : goto(indoor)
     } Transition t whenMsg movementDone -> receipt            
-    
+
     State receipt {
-        forward parkservicegui -m msgInform : msgInform(tokenid)
+    	delay 1000
+        forward parkserviceguiactor -m tokenid : tokenid(1)
     } Goto moveToSlotIn
-    
+
     State moveToSlotIn {
         forward trolleyactor -m goto : goto(parking)
-    } Transition t whenMsg movementDone -> moveToHome
-    
-    State acceptOUT {
-        
-    } Goto findSlot
-    
-	State findSlot {
+    } Transition t whenMsg movementDone -> moveToHome_exit
 
+    State acceptOUT {
+        forward parkserviceguiactor -m notice : notice(exit_request_accepted)
+    } Goto findSlot
+
+	State findSlot {
+		forward parkserviceguiactor -m notice : notice(carslotnum_1)
+		// slotnum++
     } Goto moveToSlotOut
 
     State moveToSlotOut {
@@ -88,24 +80,14 @@ QActor businesslogicactor context ctxcarparking {
     } Transition t whenMsg movementDone -> moveToOut
 
     State moveToOut {
+    	delay 1000
         forward trolleyactor -m goto : goto(outdoor)
-    } Transition t whenMsg movementDone -> moveToHome           
-                    
-                    
-                    
-}
+    } Transition t whenMsg movementDone -> moveToHome_enter
 
- 
-
-QActor parkservicegui context ctxcarparking {
-    
-    State receive initial {
-        onMsg ( msgInform : msgInform(slotnum) ) { println("The SLOTNUM is ${payloadArg(0)}") }
-    }
 }
 
 QActor trolleyactor context ctxcarparking {
-	
+
 	[#
 		val planner = carparking.DirectionalPlanner("parkingMap")
 		val proxy = carparking.RobotProxy(this, "localhost")
@@ -113,30 +95,85 @@ QActor trolleyactor context ctxcarparking {
 		val parking = arrayOf("1", "1", "E")
 		val indoor = arrayOf("6", "0", "N")
 		val outdoor = arrayOf("6", "4", "S")
+		var goingHome = false
 	#]
-	
-	State idle initial {
-		onMsg (goto : goto(home)) { run planner.planFor(home) }
-		onMsg (goto : goto(parking)) { run planner.planFor(parking) }
-		onMsg (goto : goto(outdoor)) { run planner.planFor(outdoor) }
-		onMsg (goto : goto(indoor)) { run planner.planFor(indoor) }
-	} Transition t whenTime 500 -> working
+
+	State nop initial { } Transition t whenMsg goto -> idle
+
+	State idle {
+		onMsg (goto : goto(home)) {
+			run planner.planFor(home)
+			[# goingHome = true #]
+		}
+		onMsg (goto : goto(parking)) {
+			run planner.planFor(parking)
+			[# goingHome = false #]
+		}
+		onMsg (goto : goto(outdoor)) {
+			run planner.planFor(outdoor)
+			[# goingHome = false #]
+		}
+		onMsg (goto : goto(indoor)) {
+			run planner.planFor(indoor)
+			[# goingHome = false #]
+		}
+	} Goto working
 	
 	State working {
 		[# val move = planner.getNextPlannedMove() #]
 		if [# move.isNotEmpty() #] {
 			run proxy.doMove(move)
 			run planner.updateMap(move)
-		} else { forward businesslogicactor -m movementDone : movementDone(0) }
+		} else {
+			if [# !goingHome #] {
+				forward parkmanagerserviceactor -m movementDone : movementDone(0)
+			}
+		}
 	} Transition t
 		whenMsg endmove -> working
 		whenMsg goto -> idle
 	
 }
 
+QActor parkserviceguiactor context ctxcarparking {
+    State receive initial {
+        onMsg (slotnum : slotnum(SLOTNUM)) { println("Client's GUI -> The SLOTNUM is: ${payloadArg(0)}") }
+        onMsg (tokenid : tokenid(TOKENID)) { println("Client's GUI -> The TOKENID is: ${payloadArg(0)}") }
+        onMsg (notice : notice(MESSAGE)) { println("Client's GUI -> Notice received: ${payloadArg(0)}") }
+    } Transition t
+    	whenMsg slotnum -> receive
+    	whenMsg tokenid -> receive
+    	whenMsg notice -> receive
+}
+
+QActor parkservicestatusguiactor context ctxcarparking {
+	State receive initial {
+		onMsg (outdoorAlarm : outdoorAlarm(N)) { println("Manager's GUI -> OUTDOOR alarm!") }
+		onMsg (outdoorAlarmRevoked : outdoorAlarmRevoked(N)) { println("Manager's GUI -> OUTDOOR alarm REVOKED!") }
+		onMsg (temperatureAlarm : temperatureAlarm(N)) {
+			println("Manager's GUI -> Temperature alarm!")
+			forward fanactor -m fanStart : fanStart(0)
+		}
+		onMsg (temperatureAlarmRevoked : temperatureAlarmRevoked(N)) {
+			println("Manager's GUI -> Temperature alarm REVOKED!")
+			forward fanactor -m fanStop : fanStop(0)
+		}
+	} Transition t
+		whenEvent outdoorAlarm -> receive
+		whenEvent outdoorAlarmRevoked -> receive
+		whenEvent temperatureAlarm -> receive
+		whenEvent temperatureAlarmRevoked -> receive
+}
+
+CodedQActor weightactor context ctxcarparking className "carparking.WeightActor"
+
+CodedQActor sonaractor context ctxcarparking className "carparking.SonarActor"
+
+CodedQActor thermometeractor context ctxcarparking className "carparking.ThermometerActor"
+
 QActor fanactor context ctxcarparking {
 	
-	[# val mock = carparking.LedMock("Fan") #]
+	[# val mock = carparking.LedMock("Fan", 350, 250) #]
 	
 	State stop initial {
 		run mock.turnOff()
@@ -148,90 +185,41 @@ QActor fanactor context ctxcarparking {
 	
 }
 
-QActor servicestatusactor context ctxcarparking {
-	State s initial {
-		onMsg (outdoorAlarm : outdoorAlarm(N)) { println("Service Status GUI -> OUTDOOR alarm!") }
-		onMsg (outdoorAlarmRevoked : outdoorAlarmRevoked(N)) { println("Service Status GUI -> OUTDOOR alarm REVOKED!") }
-		onMsg (temperatureAlarm : temperatureAlarm(N)) { println("Service Status GUI -> Temperature alarm!") }
-		onMsg (temperatureAlarmRevoked : temperatureAlarmRevoked(N)) { println("Service Status GUI -> Temperature alarm REVOKED!") }
-	} Transition t
-		whenEvent outdoorAlarm -> s
-		whenEvent outdoorAlarmRevoked -> s
-		whenEvent temperatureAlarm -> s
-		whenEvent temperatureAlarmRevoked -> s
+QActor outdoorsentinelactor context ctxcarparking {
+
+	State watching initial { }
+	Transition t whenEvent outdoorOccupied -> timer
+
+	State timer { }
+	Transition t
+		whenTime 5000 -> alarm // DTFREE
+		whenEvent outdoorCleared -> watching
+
+	State alarm {
+		emit outdoorAlarm : outdoorAlarm(0)
+	} Transition t whenEvent outdoorCleared -> revoke
+	
+	State revoke {
+		emit outdoorAlarmRevoked : outdoorAlarmRevoked(0)
+	} Goto watching
+
 }
 
 QActor temperaturesentinelactor context ctxcarparking {
-	
 	[#
 		val tmax = 35
 		var alarmed = false
 	#]
-	
 	State watching initial {
 		onMsg (temperature : temperature(VALUE)) {
-			[# val argument = "${payloadArg(0)}".toInt() #]
-			if [# argument > tmax && !alarmed #] {
+			if [# payloadArg(0).toInt() > tmax && !alarmed #] {
 				emit temperatureAlarm : temperatureAlarm(0)
 				[# alarmed = true #]
 			}
-			if [# argument <= tmax && alarmed #] {
+			if [# payloadArg(0).toInt() <= tmax && alarmed #] {
 				emit temperatureAlarmRevoked : temperatureAlarmRevoked(0)
 				[# alarmed = false #]
 			}
 		}
 	} Transition t whenEvent temperature -> watching
 }
-
-QActor outdoorsentinelactor context ctxcarparking {
-	
-	[#
-		var alarmed = false
-	#]
-	
-	State watching initial {
-	} Transition t whenEvent outdoorOccupied -> timer
-	
-	State timer {
-	} Transition t
-		whenTime 5000 -> alarm // DTFREE
-		whenEvent outdoorCleared -> watching
-	
-	State alarm {
-		emit outdoorAlarm : outdoorAlarm(0)
-	} Transition t whenEvent outdoorCleared -> watching
-
-}
-
-/*QActor autofan context ctxcarparking {
-	
-	State idle initial {
-		printCurrentMessage
-	} Transition t whenEvent temperature -> working
-	
-	State working {
-		onMsg (temperature: temperature(30)) {
-			forward fanactor -m fanStop : fanStop(0)
-		}
-		onMsg (temperature: temperature(40)) {
-			forward fanactor -m fanStart : fanStart(0)
-		}
-	} Goto idle
-	
-}
-
-QActor sonarwatcher context ctxcarparking {
-	State s0 initial {
-		printCurrentMessage
-	} Transition t
-		whenEvent outdoorCleared -> s0
-		whenEvent outdoorOccupied -> s0
-}
-
-QActor weightwatcher context ctxcarparking {
-	State s0 initial {
-		printCurrentMessage
-	} Transition t
-		whenEvent indoorCleared -> s0
-		whenEvent indoorOccupied -> s0
-}*/

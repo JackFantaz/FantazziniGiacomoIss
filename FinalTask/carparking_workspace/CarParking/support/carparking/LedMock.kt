@@ -3,12 +3,12 @@ package carparking
 import java.awt.Color
 import javax.swing.JFrame
 
-public class LedMock(title: String) : JFrame(title) {
+public class LedMock(title: String = "Led", x: Int = 30, y: Int = 250) : JFrame(title) {
 
     init {
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         setSize(300, 200)
-        setLocation(30, 250)
+        setLocation(x, y)
         turnOff()
         isVisible = true
     }

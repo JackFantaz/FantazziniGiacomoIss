@@ -24,18 +24,17 @@ class Temperaturesentinelactor ( name: String, scope: CoroutineScope  ) : ActorB
 					action { //it:State
 						if( checkMsgContent( Term.createTerm("temperature(VALUE)"), Term.createTerm("temperature(VALUE)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								 val argument = "${payloadArg(0)}".toInt()  
-								if(  argument > tmax && !alarmed  
+								if(  payloadArg(0).toInt() > tmax && !alarmed  
 								 ){emit("temperatureAlarm", "temperatureAlarm(0)" ) 
 								 alarmed = true  
 								}
-								if(  argument <= tmax && alarmed  
+								if(  payloadArg(0).toInt() <= tmax && alarmed  
 								 ){emit("temperatureAlarmRevoked", "temperatureAlarmRevoked(0)" ) 
 								 alarmed = false  
 								}
 						}
 					}
-					 transition(edgeName="t14",targetState="watching",cond=whenEvent("temperature"))
+					 transition(edgeName="t22",targetState="watching",cond=whenEvent("temperature"))
 				}	 
 			}
 		}

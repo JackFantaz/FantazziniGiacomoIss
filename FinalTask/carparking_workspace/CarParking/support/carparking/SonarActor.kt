@@ -8,7 +8,7 @@ import kotlinx.coroutines.runBlocking
 
 class SonarActor(name: String) : ActorBasic(name), Observer {
 
-    private val button = ButtonMock("Sonar", "Toggle sonar");
+    private val button = ButtonMock("Sonar", "Toggle sonar", 30, 250);
 
     private var present = false;
 

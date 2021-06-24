@@ -16,27 +16,31 @@ class Outdoorsentinelactor ( name: String, scope: CoroutineScope  ) : ActorBasic
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
 	@kotlinx.coroutines.ExperimentalCoroutinesApi			
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
-		
-				var alarmed = false
 		return { //this:ActionBasciFsm
 				state("watching") { //this:State
 					action { //it:State
 					}
-					 transition(edgeName="t15",targetState="timer",cond=whenEvent("outdoorOccupied"))
+					 transition(edgeName="t18",targetState="timer",cond=whenEvent("outdoorOccupied"))
 				}	 
 				state("timer") { //this:State
 					action { //it:State
 						stateTimer = TimerActor("timer_timer", 
 							scope, context!!, "local_tout_outdoorsentinelactor_timer", 5000.toLong() )
 					}
-					 transition(edgeName="t16",targetState="alarm",cond=whenTimeout("local_tout_outdoorsentinelactor_timer"))   
-					transition(edgeName="t17",targetState="watching",cond=whenEvent("outdoorCleared"))
+					 transition(edgeName="t19",targetState="alarm",cond=whenTimeout("local_tout_outdoorsentinelactor_timer"))   
+					transition(edgeName="t20",targetState="watching",cond=whenEvent("outdoorCleared"))
 				}	 
 				state("alarm") { //this:State
 					action { //it:State
 						emit("outdoorAlarm", "outdoorAlarm(0)" ) 
 					}
-					 transition(edgeName="t18",targetState="watching",cond=whenEvent("outdoorCleared"))
+					 transition(edgeName="t21",targetState="revoke",cond=whenEvent("outdoorCleared"))
+				}	 
+				state("revoke") { //this:State
+					action { //it:State
+						emit("outdoorAlarmRevoked", "outdoorAlarmRevoked(0)" ) 
+					}
+					 transition( edgeName="goto",targetState="watching", cond=doswitch() )
 				}	 
 			}
 		}

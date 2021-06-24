@@ -8,7 +8,7 @@ import kotlinx.coroutines.runBlocking
 
 class WeightActor(name: String) : ActorBasic(name), Observer {
 
-    private val button = ButtonMock("Weight", "Toggle weight");
+    private val button = ButtonMock("Weight", "Toggle weight", 30, 30);
 
     private var present = false;
 

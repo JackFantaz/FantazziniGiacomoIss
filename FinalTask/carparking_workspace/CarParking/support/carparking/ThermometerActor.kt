@@ -8,7 +8,7 @@ import kotlinx.coroutines.runBlocking
 
 class ThermometerActor(name: String) : ActorBasic(name), Observer {
 
-    private val button = ButtonMock("Thermometer", "New temperature");
+    private val button = ButtonMock("Thermometer", "New temperature", 350, 30);
 
     private var temperature = 30;
 

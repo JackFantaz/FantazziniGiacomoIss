@@ -11,7 +11,7 @@ import kotlinx.coroutines.runBlocking
 class Trolleyactor ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( name, scope ){
 
 	override fun getInitialState() : String{
-		return "idle"
+		return "nop"
 	}
 	@kotlinx.coroutines.ObsoleteCoroutinesApi
 	@kotlinx.coroutines.ExperimentalCoroutinesApi			
@@ -23,29 +23,37 @@ class Trolleyactor ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 				val parking = arrayOf("1", "1", "E")
 				val indoor = arrayOf("6", "0", "N")
 				val outdoor = arrayOf("6", "4", "S")
+				var goingHome = false
 		return { //this:ActionBasciFsm
+				state("nop") { //this:State
+					action { //it:State
+					}
+					 transition(edgeName="t6",targetState="idle",cond=whenDispatch("goto"))
+				}	 
 				state("idle") { //this:State
 					action { //it:State
 						if( checkMsgContent( Term.createTerm("goto(PLACE)"), Term.createTerm("goto(home)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								planner.planFor( home  )
+								 goingHome = true  
 						}
 						if( checkMsgContent( Term.createTerm("goto(PLACE)"), Term.createTerm("goto(parking)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								planner.planFor( parking  )
+								 goingHome = false  
 						}
 						if( checkMsgContent( Term.createTerm("goto(PLACE)"), Term.createTerm("goto(outdoor)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								planner.planFor( outdoor  )
+								 goingHome = false  
 						}
 						if( checkMsgContent( Term.createTerm("goto(PLACE)"), Term.createTerm("goto(indoor)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								planner.planFor( indoor  )
+								 goingHome = false  
 						}
-						stateTimer = TimerActor("timer_idle", 
-							scope, context!!, "local_tout_trolleyactor_idle", 500.toLong() )
 					}
-					 transition(edgeName="t5",targetState="working",cond=whenTimeout("local_tout_trolleyactor_idle"))   
+					 transition( edgeName="goto",targetState="working", cond=doswitch() )
 				}	 
 				state("working") { //this:State
 					action { //it:State
@@ -55,11 +63,13 @@ class Trolleyactor ( name: String, scope: CoroutineScope  ) : ActorBasicFsm( nam
 						planner.updateMap( move  )
 						}
 						else
-						 {forward("movementDone", "movementDone(0)" ,"businesslogicactor" ) 
+						 {if(  !goingHome  
+						  ){forward("movementDone", "movementDone(0)" ,"parkmanagerserviceactor" ) 
+						 }
 						 }
 					}
-					 transition(edgeName="t6",targetState="working",cond=whenDispatch("endmove"))
-					transition(edgeName="t7",targetState="idle",cond=whenDispatch("goto"))
+					 transition(edgeName="t7",targetState="working",cond=whenDispatch("endmove"))
+					transition(edgeName="t8",targetState="idle",cond=whenDispatch("goto"))
 				}	 
 			}
 		}
